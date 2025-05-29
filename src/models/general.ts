@@ -7,7 +7,7 @@ export interface AppRoute {
 
 export interface HttpHeaders {
     'Content-Type': 'application/json'
-    'Authentication'?: string;
+    'Authorization'?: string;
 }
 
 export interface Execution {
@@ -17,6 +17,6 @@ export interface Execution {
 }
 
 export interface LoginExecution extends Execution {
-    User?: any;
-    Jwt?: string;
+    user?: any;
+    jwt?: string;
 }

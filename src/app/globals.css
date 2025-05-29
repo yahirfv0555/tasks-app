@@ -24,3 +24,45 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.Input {
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  padding: 0.3rem 0.6rem;
+}
+
+.Button {
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.Button:hover {
+  opacity: 0.75;
+}
+
+.Message {
+  border-radius: 0.3rem;
+  width: min-content;
+  background-color: rgba(250, 235, 215, 0.258);
+  margin: 2rem;
+  min-width: 10rem;
+}
+
+.Message-Error {
+  border: #f0c9c6 solid 0.5px;
+}
+
+.Message-Title {
+  padding: 0.25rem 0.5rem;
+  color: #f53c2f;
+  font-size: 0.8rem;
+  border-bottom:  #f0c9c6 solid 0.5px;
+}
+
+.Message-Text {
+  padding: 0.5rem;
+  padding-bottom: 0.5rem;
+}

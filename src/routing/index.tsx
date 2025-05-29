@@ -1,3 +1,3 @@
 
-export * from './protected-page'
-export * from './unprotected-page'
+export * from './private-page'
+export * from './public-page'

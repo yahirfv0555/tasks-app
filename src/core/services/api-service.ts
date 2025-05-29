@@ -1,4 +1,4 @@
-import apiUrl from '../config/api';
+import { apiUrl } from '../config/api';
 import Auth from '../middleware/auth';
 import { Execution, HttpHeaders, LoginExecution } from "@/models/general";
 
@@ -16,6 +16,8 @@ class ApiService {
         this.auth = new Auth();
 
         this.auth.assignScoredJwt(this.headers);
+
+        console.log(this.headers);
     }
 
     public async get<T>(endpoint: string): Promise<T[]> {
@@ -29,7 +31,9 @@ class ApiService {
                 }
             );
 
-            if (response.ok) {
+            if (!response.ok) {
+                this.verifyResponseError(response);
+
                 const errData = await response.json();
                 throw new Error(errData.message || 'Error desconocido del servidor');
             }
@@ -47,6 +51,8 @@ class ApiService {
     public async post(body: unknown, endpoint: string): Promise<Execution | LoginExecution> {
         try {
 
+            console.log({apiUrl})
+
             const response = await fetch(
                 `${apiUrl}${endpoint}`, 
                 {
@@ -56,11 +62,13 @@ class ApiService {
                 }
             );
 
-            if (response.ok) {
+            if (!response.ok) {
+                this.verifyResponseError(response);
+
                 return {
                     message: 'Ocurrió  un error inesperado',
                     successful: false
-                }
+                };
             }
 
             const data: Execution | LoginExecution = await response.json();
@@ -87,7 +95,9 @@ class ApiService {
                 }
             );
 
-            if (response.ok) {
+            if (!response.ok) {
+                this.verifyResponseError(response);
+
                 return {
                     message: 'Ocurrió  un error inesperado',
                     successful: false
@@ -103,6 +113,15 @@ class ApiService {
                 successful: false,
                 message: (error as Error).message
             };
+        }
+    }
+
+    private verifyResponseError(response: Response): void {
+        console.log(this.headers)
+        if (response.status === 401) {
+            this.auth.clearSession();
+            window.location.href = '/login';
+            throw new Error('No autorizado');
         }
     }
 

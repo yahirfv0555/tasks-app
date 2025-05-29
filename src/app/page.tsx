@@ -1,13 +1,15 @@
+"use client";
+
 import Home from "@/components/home";
-import ProtectedPage from "@/routing/protected-page";
+import PrivatePage from "@/routing/private-page";
 
 export interface HomePageProps { }
 
 const HomePage: React.FC<HomePageProps> = () => {
   return (
-    <ProtectedPage>
+    <PrivatePage>
       <Home/>
-    </ProtectedPage>
+    </PrivatePage>
   );
 }
 

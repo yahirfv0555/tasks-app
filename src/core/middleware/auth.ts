@@ -13,7 +13,7 @@ class Auth {
 
     public assignScoredJwt(headers: HttpHeaders): void {
         if (this.scoredJwt !== null) {
-            headers['Authentication'] = `Bearer ${this.scoredJwt}`;
+            headers['Authorization'] = `Bearer ${this.scoredJwt}`;
         }
     }
 

@@ -1,11 +1,13 @@
+"use client";
+
 import Login from "@/components/login";
-import UnprotectedPage from "@/routing/unprotected-page";
+import PublicPage from "@/routing/public-page";
 
 const LoginPage: React.FC = () => {
     return (
-        <UnprotectedPage>
+        <PublicPage>
             <Login/>
-        </UnprotectedPage>
+        </PublicPage>
     );
 }
 
