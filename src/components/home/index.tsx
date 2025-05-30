@@ -6,14 +6,18 @@ import { useEffect, useState } from "react";
 import { TaskDto, TaskFilter } from "@/models/task";
 import TasksService from "@/services/tasks/tasks-service";
 import NowTaskItem from "./now-task-item";
+import { useLoaderProvider } from "@/providers/loader/loader-provider";
 
 const auth: Auth = new Auth();
 const tasksService: TasksService = new TasksService();
 
 const Home: React.FC = () => {
+    const { setIsLoading } = useLoaderProvider();
+
     const [tasks, setTasks] = useState<TaskDto[]>([]);
 
     const getTasks = async () => {
+
         const taskFilter: TaskFilter = {
             userId: 0
         };
@@ -23,10 +27,17 @@ const Home: React.FC = () => {
         setTasks(tasks);
     }
 
-    useEffect(() => {
-        getTasks();
-    }, []);
+    const getData = async() => {
+        setIsLoading(true);
 
+        await Promise.all([ getTasks() ]);
+
+        setIsLoading(false);
+    }
+
+    useEffect(() => {
+        getData();
+    }, []);
 
     return (
         <div className="flex flex-col">

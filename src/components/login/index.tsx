@@ -33,20 +33,24 @@ const Login: React.FC = () => {
             password
         };
 
-        setMessage({
-            type: 'error',
-            message: 'Prueba',
-        });
-
+      
         const execution: LoginExecution = await userService.login(loginSession);
 
         if (execution.successful === true && execution.jwt !== undefined && execution.user !== undefined) {
             auth.setJwt(execution.jwt);
             auth.setUser(execution.user);
 
+            setMessage({
+                type: 'success',
+                message: execution.message,
+            });
+
             window.location.href = '/';
         } else {
-
+            setMessage({
+                type: 'error',
+                message: execution.message,
+            });
         }
     }
 

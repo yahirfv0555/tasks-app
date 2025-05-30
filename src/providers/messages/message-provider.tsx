@@ -22,14 +22,13 @@ export const MessageProvider = ({ children }: { children: React.ReactNode }) => 
   const [showMessage, setShowMessage] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log('hola')
     if (message !== undefined) handleMessage();
   }, [message]);
 
   const handleMessage = () => {
     setTimeout(() => {
       setMessage(undefined);
-    }, 1000);
+    }, 5000);
   }
 
   return (
@@ -41,7 +40,7 @@ export const MessageProvider = ({ children }: { children: React.ReactNode }) => 
           exit="exit"
           variants={variants}
           transition={{ duration: 0.5 }}
-          className="absolute"
+          className="absolute top-4 right-4"
         >
           <Message {...message}/>
         </motion.div>

@@ -19,6 +19,10 @@
   }
 } */
 
+h1 {
+  font-size: 1.5rem;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -39,6 +43,18 @@ body {
   width: 100%;
 }
 
+.Icon-Button {
+  border: none;
+  overflow: hidden;
+  border-radius: 10rem;
+  padding: 0.25rem;
+  cursor: pointer;
+  width: min-content;
+  height: min-content;
+  background-color: #faebd742;
+  /* background-color: #0000000a; */
+}
+
 .Button:hover {
   opacity: 0.75;
 }
@@ -46,7 +62,7 @@ body {
 .Message {
   border-radius: 0.3rem;
   width: min-content;
-  background-color: rgba(250, 235, 215, 0.258);
+  background-color: #faebd742;
   margin: 2rem;
   min-width: 10rem;
 }

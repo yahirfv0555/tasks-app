@@ -17,7 +17,6 @@ class ApiService {
 
         this.auth.assignScoredJwt(this.headers);
 
-        console.log(this.headers);
     }
 
     public async get<T>(endpoint: string): Promise<T[]> {
@@ -50,8 +49,6 @@ class ApiService {
 
     public async post(body: unknown, endpoint: string): Promise<Execution | LoginExecution> {
         try {
-
-            console.log({apiUrl})
 
             const response = await fetch(
                 `${apiUrl}${endpoint}`, 
@@ -117,7 +114,6 @@ class ApiService {
     }
 
     private verifyResponseError(response: Response): void {
-        console.log(this.headers)
         if (response.status === 401) {
             this.auth.clearSession();
             window.location.href = '/login';

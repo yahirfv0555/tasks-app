@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 
-export interface InputProps {
-    type?: string;
+export interface TextAreaProps {
     className?: string;
-    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
     setValue?: (value: any) => void;
     value?: any;
     label?: string;
     placeholder?: string;
 }
 
-const Input: React.FC<InputProps> = props => {
-    const { type, className, onChange, value, setValue, label, placeholder } = props;
+const TextArea: React.FC<TextAreaProps> = props => {
+    const { className, onChange, value, setValue, label, placeholder } = props;
 
     return (
         <div className={`flex flex-col ${className}`}>
@@ -20,10 +19,8 @@ const Input: React.FC<InputProps> = props => {
                     {label}
                 </label>
             }
-          
-            <input
-                type={type}                
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            <textarea
+                onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
                     const value = event.target.value;
                     if (onChange !== undefined) onChange(event);
                     if (setValue !== undefined) setValue(value);
@@ -31,11 +28,10 @@ const Input: React.FC<InputProps> = props => {
                 value={value}
                 className={`Input`}
                 placeholder={placeholder}
-                
             />
             
         </div>
     )
 }
 
-export default Input;
+export default TextArea;

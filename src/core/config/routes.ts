@@ -8,7 +8,7 @@ const routes: AppRoute[] = [
     },
     {
         name: 'Pendientes',
-        route: 'earrings'
+        route: 'tasks'
     }
 ];
 
