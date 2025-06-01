@@ -49,19 +49,16 @@ const Signup: React.FC = () => {
                     <div className="mb-10">
                         <Input
                             setValue={setName}
-                            value={name}
                             type="text"
                             label="Nombre"
                         />
                         <Input
                             setValue={setEmail}
-                            value={email}
                             type="text"
                             label="Correo Electrónico"
                         />
                         <Input
                             setValue={setPassword}
-                            value={password}
                             type="password"
                             label="Contraseña"
                         />
@@ -78,7 +75,6 @@ const Signup: React.FC = () => {
                     <div className="mb-10">
                         <Input
                             setValue={setCode}
-                            value={code}
                             type="text"
                             label="Código"
                         />

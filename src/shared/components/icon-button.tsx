@@ -1,27 +1,26 @@
-import { ReactNode, useEffect, useState } from "react";
-import { IconType } from "react-icons";
+import { ReactNode } from "react";
 
 export interface IconButtonProps {
     className?: string;
     onClick?: () => void;
     onBlur?: () => void;
     icon: ReactNode;
+    type?: "submit" | "reset" | "button" | undefined;
 }
 
 const IconButton: React.FC<IconButtonProps> = props => {
-    const { className, onClick, onBlur, icon } = props;
+    const { className, onClick, onBlur, icon, type } = props;
 
     return (
-        <div>
-            <button
-                onClick={onClick}
-                onBlur={onBlur}
-                className={`Icon-Button ${className}`}
-            >
-                {icon}
-            </button>
-        </div>
-    )
+        <button
+            onClick={onClick}
+            onBlur={onBlur}
+            className={`Icon-Button ${className}`}
+            type={type}
+        >
+            {icon}
+        </button>
+)
 }
 
 export default IconButton;

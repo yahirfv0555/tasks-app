@@ -5,13 +5,31 @@ export interface InputProps {
     className?: string;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     setValue?: (value: any) => void;
-    value?: any;
     label?: string;
     placeholder?: string;
 }
 
 const Input: React.FC<InputProps> = props => {
-    const { type, className, onChange, value, setValue, label, placeholder } = props;
+    const { type, className, onChange, setValue, label, placeholder } = props;
+
+    const [_value, _setValue] = useState<string>('');
+
+   const _onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+
+        _setValue(value);
+
+        if (onChange !== undefined) onChange(event);
+        if (setValue === undefined) return;
+
+        if (type === 'date') {
+            const [year, month, day] = value.split("-").map(Number);
+            const date = new Date(year, month - 1, day);
+            setValue(date);
+        } else {
+            setValue(value);
+        }
+   }
 
     return (
         <div className={`flex flex-col ${className}`}>
@@ -23,15 +41,10 @@ const Input: React.FC<InputProps> = props => {
           
             <input
                 type={type}                
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    const value = event.target.value;
-                    if (onChange !== undefined) onChange(event);
-                    if (setValue !== undefined) setValue(value);
-                }}
-                value={value}
+                onChange={_onChange}
+                value={_value}
                 className={`Input`}
                 placeholder={placeholder}
-                
             />
             
         </div>

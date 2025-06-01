@@ -50,6 +50,8 @@ class ApiService {
     public async post(body: unknown, endpoint: string): Promise<Execution | LoginExecution> {
         try {
 
+            this.auth.addUserIdToObject(body);
+
             const response = await fetch(
                 `${apiUrl}${endpoint}`, 
                 {
@@ -82,6 +84,8 @@ class ApiService {
 
     public async put(body: unknown, endpoint: string): Promise<Execution | LoginExecution> {
         try {
+
+            this.auth.addUserIdToObject(body);
 
             const response = await fetch(
                 `${apiUrl}${endpoint}`, 

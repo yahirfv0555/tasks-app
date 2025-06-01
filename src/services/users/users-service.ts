@@ -4,8 +4,8 @@ import { Execution, LoginExecution, LoginSession, SignupSession } from "@/models
 
 class UsersService {
 
-    section: string = 'users/';
-    apiService: ApiService;
+    private section: string = 'users/';
+    private apiService: ApiService;
     
     constructor() {
         this.apiService = new ApiService();

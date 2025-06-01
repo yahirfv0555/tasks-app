@@ -3,6 +3,9 @@ export interface AppRoute {
     name: string;
     route: string;
     routes?: AppRoute[];
+    imagePath: string;
+    description?: string;
+    color?: string;
 }
 
 export interface HttpHeaders {

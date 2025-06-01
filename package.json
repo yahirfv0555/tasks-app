@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
+    "dayjs": "^1.11.13",
     "framer-motion": "^12.12.1",
     "next": "15.3.2",
     "react": "^19.0.0",

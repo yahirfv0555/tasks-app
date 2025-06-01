@@ -1,7 +1,7 @@
 
 export interface TaskDto {
     taskId: number;
-    value: string;
+    description: string;
     title: string;
     date: Date;
     userId: string;
@@ -10,8 +10,8 @@ export interface TaskDto {
 
 export interface TaskDao {
     taskId?: number;
-    value?: string;
-    modificatedBy: number;
+    description?: string;
+    modificatedBy?: number;
     title?: string;
     date?: Date;
     userId?: number;

@@ -1,38 +1,85 @@
 import { useLoaderProvider } from "@/providers/loader/loader-provider";
+import CustomDialog from "@/shared/components/custom-dialog";
 import IconButton from "@/shared/components/icon-button";
-import Input from "@/shared/components/input";
-import TextArea from "@/shared/components/textarea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoAdd } from "react-icons/io5";
-import SlideDown from "react-slidedown";
-import 'react-slidedown/lib/slidedown.css';
+import CreateTaskDialog from "./create-task-dialog";
+import TasksService from "@/services/tasks/tasks-service";
+import { Execution, UserDto } from "@/models";
+import { TaskDao, TaskDto, TaskFilter } from "@/models/task";
+import { useMessageProvider } from "@/providers/messages/message-provider";
+import Auth from "@/core/middleware/auth";
+
+const tasksService: TasksService = new TasksService();
+const auth: Auth = new Auth();
+
+let user: UserDto = {};
+let taskDao: TaskDao = {};
 
 const Tasks: React.FC = () => {
     const { setIsLoading } = useLoaderProvider();
+    const { setMessage } = useMessageProvider();
 
-    const [showInputs, setShowInputs] = useState<boolean>(false);
+    const [isCreateTaskDialogOpen, setIsCreateTaskDialogOpen] = useState<boolean>(false);
+    const [tasks, setTasks] = useState<TaskDto[]>([]);
+    
+    useEffect(() => {
+        getData();
+    }, []);
 
-    const [title, setTitle] = useState<string>();
-    const [value, setValue] = useState<string>();
-    const [date, setDate] = useState<Date>();
-    
-    const handleTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setTitle(value);
-    }
-    
-    const handleValue = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const value = event.target.value;
-        setValue(value);
-    }
-    
-    const handleDate = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setDate(new Date(value));
+    const getData = async (): Promise<void> => {
+        setIsLoading(true);
+
+        getUser();
+        await getTasks();
+
+        setIsLoading(false);
     }
 
-    const toggleShowInputs = () => {
-        setShowInputs(prevShowInputs => !prevShowInputs);
+    const getUser = (): void => {
+        const userAux: UserDto | undefined = auth.getUser();
+
+        if (userAux === undefined) {
+            return auth.clearSession();
+        }
+
+        user = userAux;
+    }
+
+    const getTasks = async(): Promise<void> => {
+        const filter: TaskFilter = {
+            userId: user.userId
+        };
+
+        const tasks: TaskDto[] = await tasksService.getTasks(filter);
+
+        setTasks(tasks);
+    }
+
+    const openCreateTaskDialog = () => {
+        setIsCreateTaskDialogOpen(true);
+    }
+
+    const createTask = async() => {
+        setIsLoading(true);
+
+        const execution: Execution = await tasksService.createTask(taskDao);
+
+        if (execution.successful === true) {
+            setMessage({
+                type: 'success',
+                title: 'Pendiente',
+                message: execution.message
+            });
+        } else {
+            setMessage({
+                type: 'error',
+                title: 'Error',
+                message: execution.message
+            });
+        }
+
+        setIsLoading(false);
     }
 
     return (
@@ -42,40 +89,26 @@ const Tasks: React.FC = () => {
                 <h1>Pendientes</h1>
                 <IconButton
                     icon={<IoAdd size={30} color="black"/>}
-                    onClick={toggleShowInputs}
+                    onClick={openCreateTaskDialog}
                 />
             </div>
-            <SlideDown>
-                {showInputs === true && 
-                    <div className="mt-5">
-                        <div className="flex flex-row justify-between">
-                            <Input
-                                onChange={handleTitle}
-                                value={title}
-                                type="text"
-                                label="Título"
-                                className="w-[48%] mb-5"
-                            />
-                            
-                            <Input
-                                onChange={handleDate}
-                                value={title}
-                                type="date"
-                                label="Fecha"
-                                className="w-[48%] mb-5"
-                            />
-                        </div>
-                        
-                        <TextArea
-                            onChange={handleValue}
-                            value={value}
-                            label="Descripción"
-                            className="mb-5"
-                        />
 
-                    </div>
-                }
-            </SlideDown>
+            <div>
+                {tasks.map((task: TaskDto, index: number) => {
+                    return <div>{task.title}</div>
+                })}
+            </div>
+            
+            <CustomDialog
+                isOpen={isCreateTaskDialogOpen}
+                setIsOpen={setIsCreateTaskDialogOpen}
+                title="Crear pendiente"
+            >
+                <CreateTaskDialog 
+                    createTask={createTask} 
+                    taskDao={taskDao}
+                /> 
+            </CustomDialog>
 
         </div>
     );

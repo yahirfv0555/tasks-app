@@ -5,22 +5,22 @@ export interface ButtonProps {
     onClick?: () => void;
     onBlur?: () => void;
     label?: string;
+    type?: "submit" | "reset" | "button" | undefined;
 }
 
 const Button: React.FC<ButtonProps> = props => {
-    const { className, onClick, onBlur, label } = props;
+    const { className, onClick, onBlur, label, type } = props;
 
     return (
-        <div>
-            <button
-                onClick={onClick}
-                onBlur={onBlur}
-                className={`Button ${className}`}
-            >
-                {label}
-            </button>
-        </div>
-    )
+        <button
+            onClick={onClick}
+            onBlur={onBlur}
+            className={`Button ${className}`}
+            type={type}
+        >
+            {label}
+        </button>
+)
 }
 
 export default Button;

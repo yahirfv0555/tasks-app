@@ -17,13 +17,11 @@ const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
+    const handleEmail = (value: string) => {
         setEmail(value);
     }
 
-    const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
+    const handlePassword = (value: string) => {
         setPassword(value);
     }
 
@@ -59,14 +57,12 @@ const Login: React.FC = () => {
             <div className="h-[40%] w-[45%] flex flex-col justify-between px-20">
                 <div className="mb-10">
                     <Input
-                        onChange={handleEmail}
-                        value={email}
+                        setValue={handleEmail}
                         type="text"
                         label="Correo Electrónico"
                     />
                     <Input
-                        onChange={handlePassword}
-                        value={password}
+                        setValue={handlePassword}
                         type="password"
                         label="Contraseña"
                     />
@@ -74,6 +70,7 @@ const Login: React.FC = () => {
                 <Button
                     label="Iniciar Sesión"
                     onClick={login}
+                    type="submit"
                 />
                 <div className="relative ml-auto mr-0">
                     <Link href={'/signup'} className="text-sm cursor-pointer">
