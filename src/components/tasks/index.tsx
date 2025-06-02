@@ -9,6 +9,7 @@ import { Execution, UserDto } from "@/models";
 import { TaskDao, TaskDto, TaskFilter } from "@/models/task";
 import { useMessageProvider } from "@/providers/messages/message-provider";
 import Auth from "@/core/middleware/auth";
+import TaskItem from "./task-item";
 
 const tasksService: TasksService = new TasksService();
 const auth: Auth = new Auth();
@@ -65,7 +66,12 @@ const Tasks: React.FC = () => {
 
         const execution: Execution = await tasksService.createTask(taskDao);
 
+        setIsCreateTaskDialogOpen(false);
+
         if (execution.successful === true) {
+
+            await getData();
+
             setMessage({
                 type: 'success',
                 title: 'Pendiente',
@@ -83,33 +89,38 @@ const Tasks: React.FC = () => {
     }
 
     return (
-        <div className="flex flex-col py-20 px-40">
+        <div className="w-full h-full bg-gradient-to-r from-[var(--secondary)] via-blue-100 to-blue-400 pt-10 px-30">
+            <div className="flex flex-col p-10 rounded-t-2xl bg-white">
 
-            <div className="flex flex-row justify-between">
-                <h1>Pendientes</h1>
-                <IconButton
-                    icon={<IoAdd size={30} color="black"/>}
-                    onClick={openCreateTaskDialog}
-                />
+                <div className="flex flex-row justify-between">
+                    <h1 className="font-bold">Pendientes</h1>
+                    <IconButton
+                        icon={<IoAdd size={30} color="black"/>}
+                        className="bg-[var(--secondary)]"
+                        onClick={openCreateTaskDialog}
+                    />
+                </div>
+
+                <div className="h-[0.25rem] bg-[var(--secondary)] my-10"/>
+
+                <div>
+                    {tasks.map(
+                        (task: TaskDto, index: number) => <TaskItem key={index} index={index} {...task} />
+                    )}
+                </div>
+                
+                <CustomDialog
+                    isOpen={isCreateTaskDialogOpen}
+                    setIsOpen={setIsCreateTaskDialogOpen}
+                    title="Crear pendiente"
+                >
+                    <CreateTaskDialog 
+                        createTask={createTask} 
+                        taskDao={taskDao}
+                    /> 
+                </CustomDialog>
+
             </div>
-
-            <div>
-                {tasks.map((task: TaskDto, index: number) => {
-                    return <div>{task.title}</div>
-                })}
-            </div>
-            
-            <CustomDialog
-                isOpen={isCreateTaskDialogOpen}
-                setIsOpen={setIsCreateTaskDialogOpen}
-                title="Crear pendiente"
-            >
-                <CreateTaskDialog 
-                    createTask={createTask} 
-                    taskDao={taskDao}
-                /> 
-            </CustomDialog>
-
         </div>
     );
 }

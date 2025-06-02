@@ -9,9 +9,7 @@ import NowTaskItem from "./now-task-item";
 import { useLoaderProvider } from "@/providers/loader/loader-provider";
 import { UserDto } from "@/models";
 import SlideDown from "react-slidedown";
-import 'react-slidedown/lib/slidedown.css';
-import { motion } from "framer-motion";
-import ToggleButton, { ToggleButtonOption } from "@/shared/components/toggle-button";
+import { ToggleButtonOption } from "@/shared/components/toggle-button";
 
 const auth: Auth = new Auth();
 const tasksService: TasksService = new TasksService();
@@ -21,11 +19,11 @@ let user: UserDto = {};
 const moduleOptions: ToggleButtonOption[] = [
     {
         name: 'Notas',
-        color: 'orange-400'
+        color: '#fb923c'
     },
     {
         name: 'Dibujos',
-        color: 'purple-400'
+        color: '#c084fc'
     }
 ];
 
@@ -80,23 +78,18 @@ const Home: React.FC = () => {
     const toggleShowingNotesAndDraws = () => setShowingNotesAndDraws(prevValue => !prevValue);
 
     return (
-        <div className="pt-5 flex flex-col bg-[var(--secondary)] h-[100dvh] overflow-y-scroll">
-              <div className="grid grid-cols-3 gap-10 p-10 w-full">
-                {routes.map(
-                    (appRoute: AppRoute, index: number) => <MenuItem key={index} {...appRoute}/>
-                )}
-            </div>
-            <div className="relative mb-10">
+        <div className="flex flex-col bg-gradient-to-r from-orange-100 via-blue-100 to-purple-100 h-[100dvh] overflow-y-scroll">
+             <div className="relative mt-5 mb-10">
                 <div 
                     onClick={toggleShowingTodayTasks} 
-                    className="relative font-bold text-[var(--secondary)] cursor-pointer -mb-5 ml-10 p-2 border-blue-400 border-2 rounded-md bg-blue-400 z-30 whitespace-nowrap w-[min-content]"
+                    className="relative font-bold text-white cursor-pointer -mb-5 ml-30 p-2 border-blue-400 border-2 rounded-md bg-blue-400 z-30 whitespace-nowrap w-[min-content]"
                 >
                     Tareas de Hoy
                 </div>
-                <div className="absolute border-t-2 border-blue-400 mb-20 w-full z-0"/>
+                <div className="absolute border-t-2 border-white mb-20 w-full z-0"/>
                 <SlideDown>
                     {showingTodayTasks === true && 
-                        <div className="relative bg-white p-10 flex flex-row z-10 border-blue-400 border-t-2 border-b-2 overflow-x-scroll hidden-scrollbar">
+                        <div className="relative bg-white py-7 px-30 flex flex-row z-10 border-white border-t-2 border-b-2 overflow-x-scroll hidden-scrollbar">
                             {tasks.map(
                                 (task: TaskDto, index: number) => <NowTaskItem key={index} {...task} />
                             )}
@@ -104,22 +97,39 @@ const Home: React.FC = () => {
                     }
                 </SlideDown>
             </div>
-            <div className="relative mb-10">
-                <ToggleButton
-                    className={`relative w-[10rem] cursor-pointer -mb-5 ml-10 p-2 border-${selectedModule.color} border-2 rounded-md bg-white text-white z-30 whitespace-nowrap`}
-                    options={moduleOptions}
-                    setSelectedOption={setSelectedModule}
-                    onClick={toggleShowingNotesAndDraws}
-                />
-                <div className={`absolute border-t-2 border-${selectedModule.color} mb-20 w-full z-0`}/>
-                <SlideDown>
-                    {showingNotesAndDraws === true && 
-                        <div className={`relative bg-white p-10 flex flex-row z-10 border-${selectedModule.color} border-t-2 border-b-2 overflow-x-scroll hidden-scrollbar`}>
-                            
-                        </div>
-                    }
-                </SlideDown>
+
+            <div className="bg-white rounded-t-2xl mx-10 px-20 py-10 h-full">
+                <div className="grid grid-cols-3 gap-10 w-full">
+                    {routes.map(
+                        (appRoute: AppRoute, index: number) => <MenuItem key={index} {...appRoute}/>
+                    )}
+                </div>
+            
+                {/* <div className="relative mb-10">
+                    <ToggleButton
+                        className={`relative w-[10rem] cursor-pointer -mb-5 ml-30 p-2 border-2 rounded-md text-white z-30 whitespace-nowrap`}
+                        style={{ borderColor: selectedModule.color }}
+                        options={moduleOptions}
+                        setSelectedOption={setSelectedModule}
+                        onClick={toggleShowingNotesAndDraws}
+                    />
+                    <div 
+                        className={`absolute border-t-2 border-[${selectedModule.color}] mb-20 w-full z-0`}
+                        style={{ borderColor: selectedModule.color }}
+                    />
+                    <SlideDown>
+                        {showingNotesAndDraws === true && 
+                            <div 
+                                className={`relative bg-white py-10 px-30 flex flex-row z-10 border-t-2 border-b-2 overflow-x-scroll hidden-scrollbar`}
+                                style={{ borderColor: selectedModule.color }}
+                            >
+                                
+                            </div>
+                        }
+                    </SlideDown>
+                </div> */}
             </div>
+
         </div>
     );
 }

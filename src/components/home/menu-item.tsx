@@ -26,16 +26,17 @@ const MenuItem: React.FC<MenuItemProps> = props => {
             href={route} 
             className={
                 `text-white h-[10rem] rounded-md border-2 
-                border-${color} bg-${color}
                 overflow-hidden transition-all duration-300 ease-in-out
             `}
+            style={{ backgroundColor: color, borderColor: color }}
             onMouseEnter={showDescription}
             onMouseLeave={hideDescription}
         >
             <div className={
                 `${makeImageContSmall === true ? 'h-[50%]' : 'h-[80%]'}  
-                rounded-md bg-white flex flex-row justify-center items-center
+                rounded-md flex flex-row justify-center items-center
                 transition-all duration-300 ease-in-out
+                bg-[var(--transparent-white)]
             `}>
                 <Image
                     src={imagePath}

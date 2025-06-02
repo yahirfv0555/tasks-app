@@ -36,14 +36,14 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = props => {
                     setValue={handleTitle}
                     type="text"
                     label="Título"
-                    className="w-[48%] mb-5"
+                    containerClassName="w-[48%] mb-5"
                 />
                 
                 <Input
                     setValue={handleDate}
                     type="date"
                     label="Fecha"
-                    className="w-[48%] mb-5"
+                    containerClassName="w-[48%] mb-5"
                 />
             </div>
             
@@ -55,6 +55,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = props => {
 
             <Button
                 label="Guardar"
+                className="bg-blue-400 font-bold border-none"
                 onClick={submit}
             />
 

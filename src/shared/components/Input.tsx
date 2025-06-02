@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 export interface InputProps {
     type?: string;
     className?: string;
+    containerClassName?: string;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     setValue?: (value: any) => void;
     label?: string;
@@ -10,7 +11,7 @@ export interface InputProps {
 }
 
 const Input: React.FC<InputProps> = props => {
-    const { type, className, onChange, setValue, label, placeholder } = props;
+    const { type, className, containerClassName, onChange, setValue, label, placeholder } = props;
 
     const [_value, _setValue] = useState<string>('');
 
@@ -32,7 +33,7 @@ const Input: React.FC<InputProps> = props => {
    }
 
     return (
-        <div className={`flex flex-col ${className}`}>
+        <div className={`flex flex-col ${containerClassName}`}>
             {label !== undefined &&
                 <label>
                     {label}
@@ -43,7 +44,7 @@ const Input: React.FC<InputProps> = props => {
                 type={type}                
                 onChange={_onChange}
                 value={_value}
-                className={`Input`}
+                className={`py-[0.3rem] px-[0.6rem] border-b-2 border-black bg-[var(--secondary)] rounded-t-md ${className}`}
                 placeholder={placeholder}
             />
             

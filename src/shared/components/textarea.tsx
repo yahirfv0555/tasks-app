@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 export interface TextAreaProps {
     className?: string;
+    containerClassName?: string;
     onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
     setValue?: (value: any) => void;
     label?: string;
@@ -9,7 +10,7 @@ export interface TextAreaProps {
 }
 
 const TextArea: React.FC<TextAreaProps> = props => {
-    const { className, onChange, setValue, label, placeholder } = props;
+    const { className, containerClassName, onChange, setValue, label, placeholder } = props;
 
     const [_value, _setValue] = useState<string>('');
 
@@ -23,7 +24,7 @@ const TextArea: React.FC<TextAreaProps> = props => {
     }
 
     return (
-        <div className={`flex flex-col ${className}`}>
+        <div className={`flex flex-col ${containerClassName}`}>
             {label !== undefined &&
                 <label>
                     {label}
@@ -32,7 +33,7 @@ const TextArea: React.FC<TextAreaProps> = props => {
             <textarea
                 onChange={_onChange}
                 value={_value}
-                className={`Input`}
+                className={`py-[0.3rem] px-[0.6rem] border-b-2 border-black bg-[var(--secondary)] rounded-t-md ${className}`}
                 placeholder={placeholder}
             />
             

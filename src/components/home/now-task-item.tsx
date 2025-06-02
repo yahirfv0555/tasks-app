@@ -21,14 +21,13 @@ const NowTaskItem: React.FC<NowTaskItemProps> = props => {
         <div 
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
-            className={`w-[15rem] h-[8rem] bg-[var(--secondary)] text-black border-white border-2 flex flex-col justify-between cursor-pointer rounded-md mx-2 py-2 hover:transform hover:scale-97 hover:border-blue-400`}
+            className={`relative w-[15rem] bg-blue-100 h-[7.5rem] border-blue-100 border-2 flex flex-col justify-center cursor-pointer rounded-md mx-2 hover:transform hover:scale-97`}
         >
-            <div className="px-2">
+            <div className="px-2 bg-blue-100 rounded-t-md text-black h-[70%]">
                 <p className="text-base font-bold">{title}</p>
                 <p className="text-sm text-black">{(description.length > 10 ? description.slice(0, 10)+'...' : description)}</p>
             </div>
-            <div className="w-full">
-                <div className={`border-t-2 w-[100%] mx-auto ${borderColor}`}/>
+            <div className="w-full h-[30%] bg-black text-white rounded-b-md py-1">
                 <span className="px-2 text-sm">{dayjs(date).format('DD/MM/YYYY')}</span>
             </div>
         </div>

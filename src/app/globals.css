@@ -5,6 +5,7 @@
   --foreground: #171717;
   --primary: #60A5FA;
   --secondary: #ece9e2;
+  --transparent-white: #ffffffeb;
 }
 
 @theme inline {
@@ -32,15 +33,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.Input {
-  border: 1px solid black;
-  border-radius: 0.3rem;
-  padding: 0.3rem 0.6rem;
-  background-color: var(--secondary);
-}
-
 .Button {
-  border: 1px solid black;
   border-radius: 0.3rem;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
@@ -55,7 +48,6 @@ body {
   cursor: pointer;
   width: min-content;
   height: min-content;
-  background-color: var(--secondary);
   border: transparent 1px solid;
 }
 

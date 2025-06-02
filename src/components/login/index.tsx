@@ -60,17 +60,20 @@ const Login: React.FC = () => {
                         setValue={handleEmail}
                         type="text"
                         label="Correo Electrónico"
+                        className="bg-white"
                     />
                     <Input
                         setValue={handlePassword}
                         type="password"
                         label="Contraseña"
+                        className="bg-white"
                     />
                 </div>
                 <Button
                     label="Iniciar Sesión"
                     onClick={login}
                     type="submit"
+                    className="border-2 border-black font-bold bg-[var(--secondary)]"
                 />
                 <div className="relative ml-auto mr-0">
                     <Link href={'/signup'} className="text-sm cursor-pointer">
