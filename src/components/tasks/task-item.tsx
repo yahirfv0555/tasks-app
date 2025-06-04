@@ -7,85 +7,112 @@ import SlideDown from "react-slidedown";
 import 'react-slidedown/lib/slidedown.css';
 
 export interface TaskItemProps extends TaskDto {
-    index: number;
+    openUpdateDialog: (task: TaskDto) => void;
+    openDuplicateDialog: (task: TaskDto) => void;
 }
 
 const TaskItem: React.FC<TaskItemProps> = props => {
-    const { index, title, description, date } = props;
+    const { openUpdateDialog, openDuplicateDialog, title, description, date } = props;
 
     const [showingMore, setShowingMore] = useState<boolean>(false);
+    const [showingToolBar, setShowingToolBar] = useState<boolean>(false);
 
     const toggleShowingMore = () => setShowingMore(prevValue => !prevValue);
+    const toggleShowingToolBar = () => setShowingToolBar(prevValue => !prevValue);
 
-    const openEditDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const _openUpdateDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation(); 
+        openUpdateDialog(props);
     }
 
-    const openDuplicateDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const _openDuplicateDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation(); 
+        openDuplicateDialog(props);
+    }
+    
+    const _openArchiveDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation(); 
     }
     
-    const openArchiveDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.stopPropagation(); 
-    }
-    
-    const openDeleteDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const _openDeleteDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation(); 
     }
 
     return (
         <div 
-            className={`flex flex-col bg-blue-100 mb-2 px-2 rounded-md cursor-pointer`} 
+            className={`
+                flex flex-col mb-4 px-6 rounded-md cursor-pointer text-white
+                ${showingMore === false ? 'bg-blue-400 hover:bg-blue-200' : 'bg-blue-300 hover:bg-blue-100'} 
+                transition-all duration-300 ease-in-out transition-colors
+                shadow-sm hover:shadow-md
+            `} 
             onClick={toggleShowingMore}
         >
-            <div className="flex flex-row justify-between">
-                <div 
-                    className="font-bold w-[80%] py-2"
-                >
-                    {title}
+            <div className="flex flex-row justify-between transition-all duration-300 ease-in-out overflow-x-hidden">
+                <div className="w-[60%] py-2">
+                    <p>
+                        {title}
+                    </p>
+                    <SlideDown>
+                        {showingMore === true &&
+                            <div className={`
+                                flex flex-row justify-between 
+                            `}>
+                                <div className="w-[80%] text-sm">{description}</div>
+                            </div>
+                        }
+                    </SlideDown>
                 </div>
-                <div 
-                    className="w-[20%] border-l-2 border-white text-center flex flex-col justify-center items-center"
+                <div className={`
+                        w-[40%] flex flex-row justify-between
+                        transform transition-all duration-500 ease-in-out
+                        ${showingMore === true || showingToolBar == true ? 'translate-x-0' : 'translate-x-[50%]'}
+                        ${showingMore ? 'my-3' : 'my-1'}
+                    `}
+                    onMouseEnter={toggleShowingToolBar}
+                    onMouseLeave={toggleShowingToolBar}
                 >
-                    {dayjs(date).format('DD/MM/YYYY')}
+                    <div 
+                        className={`
+                            w-[50%] text-center flex flex-col justify-center items-center 
+                            ${showingMore === true || showingToolBar == true ? 'rounded-l-md bg-orange-300' : 'rounded-md bg-orange-300'}
+                        `}
+                    >
+                        {dayjs(date).format('DD/MM/YYYY')}
+                    </div>
+                    <div className={`
+                            w-[50%] text-center flex flex-row space-x-2 justify-center items-center bg-orange-300 rounded-r-md
+                            transition-all duration-300 ease-in-out
+                            ${showingMore === true || showingToolBar === true ? 'opacity-100' : 'opacity-0'}
+                        `}
+                    >
+                        <IconButton
+                            className="bg-blue-400"
+                            icon={<IoPencil size={15} color="black"/>}
+                            title="Editar"
+                            onClick={_openUpdateDialog}
+                        />
+                        <IconButton
+                            className="bg-green-400"
+                            icon={<IoCopy size={15} color="black"/>}
+                            title="Duplicar"
+                            onClick={_openDuplicateDialog}
+                        />
+                        <IconButton
+                            className="bg-yellow-200"
+                            icon={<IoArchive size={15} color="black"/>}
+                            title="Archivar"
+                            onClick={_openArchiveDialog}
+                        />
+                        <IconButton
+                            className="bg-red-400"
+                            icon={<IoTrash size={15} color="black"/>}
+                            title="Eliminar"
+                            onClick={_openDeleteDialog}
+                        />
+                    </div>
                 </div>
             </div>
-            
-            <SlideDown>
-                 {showingMore === true &&
-                    <div className={`
-                        flex flex-row justify-between 
-                    `}>
-                        <div className="w-[80%] text-sm">{description}</div>
-                        <div className="w-[20%] border-l-2 border-white flex flex-row justify-between px-2 py-1">
-                            <IconButton
-                                className="bg-blue-400"
-                                icon={<IoPencil size={15} color="black"/>}
-                                title="Editar"
-                                onClick={openEditDialog}
-                            />
-                            <IconButton
-                                className="bg-green-400"
-                                icon={<IoCopy size={15} color="black"/>}
-                                title="Duplicar"
-                                onClick={openDuplicateDialog}
-                            />
-                            <IconButton
-                                className="bg-yellow-200"
-                                icon={<IoArchive size={15} color="black"/>}
-                                title="Archivar"
-                                onClick={openArchiveDialog}
-                            />
-                            <IconButton
-                                className="bg-red-400"
-                                icon={<IoTrash size={15} color="black"/>}
-                                title="Eliminar"
-                                onClick={openDeleteDialog}
-                            />
-                        </div>
-                    </div>
-                }
-            </SlideDown>
            
         </div>
     );

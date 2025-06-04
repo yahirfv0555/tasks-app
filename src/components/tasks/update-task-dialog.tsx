@@ -4,20 +4,21 @@ import { ErrorMessageProps } from "@/shared/components/error-message";
 import Input from "@/shared/components/input";
 import TextArea from "@/shared/components/textarea";
 import validateNotNullableData from "@/shared/functions/validate-not-nullable-data";
-import { Description } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect } from "react";
 
-export interface CreateTaskDialogProps {
-    createTask: () => Promise<void>;
+export interface UpdateTaskDialogProps {
+    updateTask: () => Promise<void>;
     taskDao: TaskDao;
-    taskDto?: TaskDto;
+    taskDto: TaskDto;
 }
 
-const CreateTaskDialog: React.FC<CreateTaskDialogProps> = props => {
-    const { createTask, taskDao, taskDto } = props;
-
-    const [startValidation, setStartValidation] = useState<boolean>(false);
+const UpdateTaskDialog: React.FC<UpdateTaskDialogProps> = props => {
+    const { updateTask, taskDao, taskDto } = props;
     
+    useEffect(() => {
+        taskDao.taskId = taskDto.taskId;
+    }, []);
+
     //#region Handles
     const handleTitle = (value: string) => {
         taskDao.title = value;
@@ -30,6 +31,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = props => {
     const handleDate = (value: Date) => {
         taskDao.date = value;
     }
+
     //#endregion
 
     //#region Validaciones
@@ -61,8 +63,7 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = props => {
     //#endregion
 
     const submit = async(): Promise<void> => {
-        setStartValidation(prevValue => !prevValue);
-        if (validateData()) await createTask();
+        if (validateData()) await updateTask();
     }
 
     return (
@@ -70,33 +71,30 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = props => {
             <div className="flex flex-row justify-between">
                 <Input
                     setValue={handleTitle}
+                    initialValue={taskDto.title}
                     type="text"
                     label="Título"
                     containerClassName="w-[48%] mb-5"
-                    initialValue={taskDto?.title}
                     validateData={validateTitle}
-                    startValidation={startValidation}
                 />
                 
                 <Input
                     setValue={handleDate}
+                    initialValue={taskDto.date}
                     type="date"
                     label="Fecha"
                     containerClassName="w-[48%] mb-5"
-                    minDate={new Date()}
                     validateData={validateDate}
-                    initialValue={taskDto?.date}
-                    startValidation={startValidation}
+                    minDate={new Date()}
                 />
             </div>
             
             <TextArea
                 setValue={handleDescription}
                 label="Descripción"
+                initialValue={taskDto.description}
                 containerClassName="mb-5"
                 validateData={validateDescription}
-                initialValue={taskDto?.description}
-                startValidation={startValidation}
             />
 
             <Button
@@ -109,4 +107,4 @@ const CreateTaskDialog: React.FC<CreateTaskDialogProps> = props => {
     );
 }
 
-export default CreateTaskDialog;
+export default UpdateTaskDialog;

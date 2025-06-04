@@ -20,7 +20,6 @@ class TasksService {
     }
 
     public createTask = async(taskDao: TaskDao): Promise<Execution> => {
-
         const execution: Execution = await this.apiService.post(taskDao, `${this.section}`);
         return execution;
     }

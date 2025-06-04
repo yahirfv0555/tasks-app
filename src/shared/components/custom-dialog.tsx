@@ -1,10 +1,7 @@
-
-
-import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { ReactNode } from 'react';
-import Button from './button';
-import IconButton from './icon-button';
+import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { IoClose } from 'react-icons/io5';
+import IconButton from './icon-button';
 
 export interface CustomDialogProps {
     isOpen: boolean;
