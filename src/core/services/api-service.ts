@@ -23,7 +23,7 @@ class ApiService {
         try {
 
             const response = await fetch(
-                `${apiUrl}${endpoint}`, 
+                `${apiUrl}${endpoint}`.replaceAll(/\s+/g, ''), 
                 {
                     method: 'GET',
                     headers: this.headers as any,
@@ -53,7 +53,7 @@ class ApiService {
             this.auth.addUserIdToObject(body);
 
             const response = await fetch(
-                `${apiUrl}${endpoint}`, 
+                `${apiUrl}${endpoint}`.replaceAll(/\s+/g, ''), 
                 {
                     method: 'POST',
                     headers: this.headers as any,
@@ -88,7 +88,7 @@ class ApiService {
             this.auth.addUserIdToObject(body);
 
             const response = await fetch(
-                `${apiUrl}${endpoint}`, 
+                `${apiUrl}${endpoint}`.replaceAll(/\s+/g, ''), 
                 {
                     method: 'PUT',
                     headers: this.headers as any,
@@ -106,6 +106,39 @@ class ApiService {
             }
 
             const data: Execution | LoginExecution = await response.json();
+
+            return data;
+
+        } catch(error) {
+            return {
+                successful: false,
+                message: (error as Error).message
+            };
+        }
+    }
+
+     public async delete(body: unknown, endpoint: string): Promise<Execution> {
+        try {
+
+            const response = await fetch(
+                `${apiUrl}${endpoint}`.replaceAll(/\s+/g, ''), 
+                {
+                    method: 'DELETE',
+                    headers: this.headers as any,
+                    body: JSON.stringify(body)
+                }
+            );
+
+            if (!response.ok) {
+                this.verifyResponseError(response);
+
+                return {
+                    message: 'Ocurrió  un error inesperado',
+                    successful: false
+                }
+            }
+
+            const data: Execution = await response.json();
 
             return data;
 

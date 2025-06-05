@@ -10,10 +10,14 @@ import 'react-slidedown/lib/slidedown.css';
 export interface TaskItemProps extends TaskDto {
     openUpdateDialog: (task: TaskDto) => void;
     openDuplicateDialog: (task: TaskDto) => void;
+    openArchiveDialog: (task: TaskDto) => void;
+    openDeleteDialog: (task: TaskDto) => void;
+    disabled?: boolean;
+    className?: string;
 }
 
 const TaskItem: React.FC<TaskItemProps> = props => {
-    const { openUpdateDialog, openDuplicateDialog, title, description, date } = props;
+    const { openUpdateDialog, openDuplicateDialog, openArchiveDialog, openDeleteDialog, disabled, title, description, date, className} = props;
 
     const [showingMore, setShowingMore] = useState<boolean>(false);
     const [showingToolBar, setShowingToolBar] = useState<boolean>(false);
@@ -35,21 +39,23 @@ const TaskItem: React.FC<TaskItemProps> = props => {
     
     const _openArchiveDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation(); 
+        openArchiveDialog(props);
     }
     
     const _openDeleteDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation(); 
+        openDeleteDialog(props);
     }
 
     return (
         <div 
             className={`
-                flex flex-col mb-4 px-6 rounded-md cursor-pointer text-white
+                w-full flex flex-col mb-4 rounded-md cursor-pointer text-white px-6
                 ${showingMore === false ? 'bg-blue-400 hover:bg-[var(--secondary)]' : 'bg-blue-300 hover:bg-blue-200'} 
-                transition-all duration-300 ease-in-out transition-colors
+                transition-all duration-300 ease-in-out transition-colors ${className}
                 shadow-sm hover:shadow-md
             `} 
-            onClick={toggleShowingMore}
+            onClick={disabled === true ? undefined : toggleShowingMore}
         >
             <div className="relative flex flex-row justify-between items-center transition-all duration-300 ease-in-out overflow-x-hidden">
                 <div className="w-[60%] py-2">
@@ -67,12 +73,12 @@ const TaskItem: React.FC<TaskItemProps> = props => {
                     </SlideDown>
                 </div>
                 <div className={`
-                        w-[40%] h-[1.9rem] flex flex-row justify-between
+                        w-[40%] h-[1.9rem] flex flex-row justify-between shadows font-bold
                         transform transition-all duration-500 ease-in-out
                         ${showingMore === true || showingToolBar == true ? 'translate-x-0' : 'translate-x-[50%]'}
                     `}
-                    onMouseEnter={openToolBar}
-                    onMouseLeave={closeToolBar}
+                    onMouseEnter={disabled === true ? undefined : openToolBar}
+                    onMouseLeave={disabled === true ? undefined : closeToolBar}
                 >
                     <div 
                         className={`
@@ -97,25 +103,25 @@ const TaskItem: React.FC<TaskItemProps> = props => {
                     >
                         <IconButton
                             className="bg-blue-400"
-                            icon={<IoPencil size={15} color="black"/>}
+                            icon={<IoPencil size={15} color="white"/>}
                             title="Editar"
                             onClick={_openUpdateDialog}
                         />
                         <IconButton
                             className="bg-green-400"
-                            icon={<IoCopy size={15} color="black"/>}
+                            icon={<IoCopy size={15} color="white"/>}
                             title="Duplicar"
                             onClick={_openDuplicateDialog}
                         />
                         <IconButton
                             className="bg-yellow-200"
-                            icon={<IoArchive size={15} color="black"/>}
+                            icon={<IoArchive size={15} color="white"/>}
                             title="Archivar"
                             onClick={_openArchiveDialog}
                         />
                         <IconButton
                             className="bg-red-400"
-                            icon={<IoTrash size={15} color="black"/>}
+                            icon={<IoTrash size={15} color="white"/>}
                             title="Eliminar"
                             onClick={_openDeleteDialog}
                         />

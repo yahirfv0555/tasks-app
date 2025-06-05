@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ErrorMessage, { ErrorMessageProps } from "./error-message";
 
 export interface InputProps {
+    id?: string;
     type?: string;
     className?: string;
     containerClassName?: string;
@@ -16,10 +17,13 @@ export interface InputProps {
     startValidation?: boolean;
     minDate?: Date;
     maxDate?: Date;
+    iconButton?: React.ReactElement;
+    isErrorMessageNeeded?: boolean;
+    disabled?: boolean;
 }
 
 const Input: React.FC<InputProps> = props => {
-    const { type, className, containerClassName, onChange, onBlur, setValue, label, placeholder, initialValue, validateData, startValidation, minDate, maxDate } = props;
+    const { id, type, className, containerClassName, onChange, onBlur, setValue, label, placeholder, initialValue, validateData, startValidation, minDate, maxDate, iconButton, isErrorMessageNeeded, disabled } = props;
 
     const [_value, _setValue] = useState<string>('');
     const [firstValidation, setFirstValidation] = useState<boolean>(true);
@@ -83,8 +87,15 @@ const Input: React.FC<InputProps> = props => {
         if (validateData !== undefined) setErrorMessage({ ...validateData(typedValue) });
     }
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (id !== undefined && event.key === 'Enter') {
+            event.preventDefault();
+            document.getElementById(id)!.click();
+        }
+    }
+
     return (
-        <div className={`flex flex-col ${containerClassName}`}>
+        <div className={`relative flex flex-col ${containerClassName}`}>
             {label !== undefined &&
                 <label className={`text-sm`}>
                     {label}
@@ -98,15 +109,23 @@ const Input: React.FC<InputProps> = props => {
                     ${className}
                     ${errorMessage.showing === true ? 'bg-red-100' : ''}
                 `}
+                onKeyDown={handleKeyDown}
                 onChange={_onChange}
                 onBlur={_onBlur}
                 value={_value}
                 placeholder={placeholder}
+                disabled={disabled}
                 min={type === 'date' ? minDate !== undefined ? dayjs(minDate).format('YYYY-MM-DD') : undefined : undefined}
                 max={type === 'date' ? maxDate !== undefined ? dayjs(maxDate).format('YYYY-MM-DD') : undefined : undefined}
             />
 
-            <ErrorMessage {...errorMessage} />
+            {iconButton !== undefined &&
+                <div className="absolute w-min h-min pt-[10%] right-2 -translate-y-1/2">
+                    {iconButton}
+                </div>
+            }
+
+            { isErrorMessageNeeded === true && <ErrorMessage {...errorMessage} /> }
             
         </div>
     )

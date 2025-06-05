@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 export interface IconButtonProps {
+    id?: string;
     className?: string;
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
     onBlur?: () => void;
@@ -10,10 +11,11 @@ export interface IconButtonProps {
 }
 
 const IconButton: React.FC<IconButtonProps> = props => {
-    const { className, onClick, onBlur, icon, title, type } = props;
+    const { id, className, onClick, onBlur, icon, title, type } = props;
 
     return (
         <button
+            id={id}
             onClick={onClick}
             onBlur={onBlur}
             className={`Icon-Button ${className}`}

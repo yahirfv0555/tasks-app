@@ -10,6 +10,7 @@ export interface TaskDto {
 
 export interface TaskDao {
     taskId?: number;
+    active?: boolean;
     description?: string;
     modificatedBy?: number;
     title?: string;
@@ -23,4 +24,5 @@ export interface TaskFilter {
     date?: Date;
     fromDate?: Date;
     userId?: number;
+    title?: string;
 }
