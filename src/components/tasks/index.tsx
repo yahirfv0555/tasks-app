@@ -12,6 +12,8 @@ import Auth from "@/core/middleware/auth";
 import TaskItem from "./task-item";
 import UpdateTaskDialog from "./update-task-dialog";
 import { ErrorMessageProps } from "@/shared/components/error-message";
+import ExpandableFab from "@/shared/components/expandable-fab";
+import Image from "next/image";
 
 const tasksService: TasksService = new TasksService();
 const auth: Auth = new Auth();
@@ -134,24 +136,38 @@ const Tasks: React.FC = () => {
 
     return (
         <div className="w-full h-full bg-gray-100 pt-10 px-30">
+            <div className="fixed bottom-10 right-10 z-50 h-auto">
+                <ExpandableFab
+                    iconButtons={[
+                        <IconButton
+                            icon={<IoCheckboxOutline size={30} color="white"/>}
+                            className="bg-[var(--secondary)] hover:bg-blue-400 shadow"
+                            onClick={openCreateTaskDialog}
+                        />,
+                        <IconButton
+                            icon={<IoFilter size={30} color="white"/>}
+                            className="bg-[var(--secondary)] hover:bg-blue-400 shadow"
+                            onClick={openCreateTaskDialog}
+                        />,
+                        <IconButton
+                            icon={<IoAdd size={30} color="white"/>}
+                            className="bg-[var(--secondary)] hover:bg-blue-400 shadow"
+                            onClick={openCreateTaskDialog}
+                        />
+                    ]}
+                />
+            </div>
             <div className="flex flex-col p-10 rounded-t-2xl bg-white">
-                <div className="flex flex-row justify-between">
-                    <h1 className="text-white/100 bg-orange-300 rounded-md py-2 px-4">{'Inicio > Pendientes'}</h1>
-                    <div className="flex flex-row justify-between w-[12.5%]">
-                        <IconButton
-                            icon={<IoCheckboxOutline size={25} color="black"/>}
-                            className="bg-[var(--secondary)] hover:bg-blue-400"
+                <div className="flex flex-row justify-start">
+                    <h1 className="text-white/100 bg-orange-300 rounded-l-md py-2 px-4">{'Inicio > Pendientes'}</h1>
+                    <div className="flex flex-row justify-end items-center p-2 rounded-r-md bg-orange-300 border-l-1 border-white cursor-pointer hover:bg-blue-300">
+                        <Image
+                            src={'/assets/img/tasks-icon.png'}
+                            width={30}
+                            height={30}
+                            className="" 
                             onClick={openCreateTaskDialog}
-                        />
-                        <IconButton
-                            icon={<IoFilter size={25} color="black"/>}
-                            className="bg-[var(--secondary)] hover:bg-blue-400"
-                            onClick={openCreateTaskDialog}
-                        />
-                        <IconButton
-                            icon={<IoAdd size={25} color="black"/>}
-                            className="bg-[var(--secondary)] hover:bg-blue-400"
-                            onClick={openCreateTaskDialog}
+                            alt={"Agregar Pendiente"}                        
                         />
                     </div>
                 </div>

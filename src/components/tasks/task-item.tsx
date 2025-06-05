@@ -2,6 +2,7 @@ import { TaskDto } from "@/models/task";
 import IconButton from "@/shared/components/icon-button";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { IoIosArrowBack, IoIosArrowDropleft, IoIosArrowDropleftCircle } from "react-icons/io";
 import { IoArchive, IoCopy, IoPencil, IoRemove, IoTrash } from "react-icons/io5";
 import SlideDown from "react-slidedown";
 import 'react-slidedown/lib/slidedown.css';
@@ -18,7 +19,9 @@ const TaskItem: React.FC<TaskItemProps> = props => {
     const [showingToolBar, setShowingToolBar] = useState<boolean>(false);
 
     const toggleShowingMore = () => setShowingMore(prevValue => !prevValue);
-    const toggleShowingToolBar = () => setShowingToolBar(prevValue => !prevValue);
+
+    const closeToolBar = () => setShowingToolBar(false);
+    const openToolBar = () => setShowingToolBar(true);
 
     const _openUpdateDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation(); 
@@ -42,13 +45,13 @@ const TaskItem: React.FC<TaskItemProps> = props => {
         <div 
             className={`
                 flex flex-col mb-4 px-6 rounded-md cursor-pointer text-white
-                ${showingMore === false ? 'bg-blue-400 hover:bg-blue-200' : 'bg-blue-300 hover:bg-blue-100'} 
+                ${showingMore === false ? 'bg-blue-400 hover:bg-[var(--secondary)]' : 'bg-blue-300 hover:bg-blue-200'} 
                 transition-all duration-300 ease-in-out transition-colors
                 shadow-sm hover:shadow-md
             `} 
             onClick={toggleShowingMore}
         >
-            <div className="flex flex-row justify-between transition-all duration-300 ease-in-out overflow-x-hidden">
+            <div className="relative flex flex-row justify-between items-center transition-all duration-300 ease-in-out overflow-x-hidden">
                 <div className="w-[60%] py-2">
                     <p>
                         {title}
@@ -64,25 +67,31 @@ const TaskItem: React.FC<TaskItemProps> = props => {
                     </SlideDown>
                 </div>
                 <div className={`
-                        w-[40%] flex flex-row justify-between
+                        w-[40%] h-[1.9rem] flex flex-row justify-between
                         transform transition-all duration-500 ease-in-out
                         ${showingMore === true || showingToolBar == true ? 'translate-x-0' : 'translate-x-[50%]'}
-                        ${showingMore ? 'my-3' : 'my-1'}
                     `}
-                    onMouseEnter={toggleShowingToolBar}
-                    onMouseLeave={toggleShowingToolBar}
+                    onMouseEnter={openToolBar}
+                    onMouseLeave={closeToolBar}
                 >
                     <div 
                         className={`
-                            w-[50%] text-center flex flex-col justify-center items-center 
-                            ${showingMore === true || showingToolBar == true ? 'rounded-l-md bg-orange-300' : 'rounded-md bg-orange-300'}
+                            w-[50%] h-[100%] text-center flex flex-row justify-between items-center 
+                            ${showingMore === true || showingToolBar == true ? 'bg-orange-300 rounded-l-md ' : 'bg-orange-300 rounded-md '}
                         `}
                     >
-                        {dayjs(date).format('DD/MM/YYYY')}
+                        <div className="flex flex-row justify-end w-[65%]">
+                            {dayjs(date).format('DD/MM/YYYY')}
+                        </div>
+                        {showingToolBar === false && showingMore === false &&
+                            <div className="h-[100%] ml-[15%] w-[20%] border-l-1 border-white bg-orange-300 flex flex-row justify-center items-center rounded-r-md">
+                                <IoIosArrowBack size={15} color="white"/>
+                            </div>
+                        }
                     </div>
                     <div className={`
                             w-[50%] text-center flex flex-row space-x-2 justify-center items-center bg-orange-300 rounded-r-md
-                            transition-all duration-300 ease-in-out
+                            transition-all duration-300 ease-in-out border-l-1 border-white
                             ${showingMore === true || showingToolBar === true ? 'opacity-100' : 'opacity-0'}
                         `}
                     >
