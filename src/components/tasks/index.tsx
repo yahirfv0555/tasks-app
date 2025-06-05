@@ -18,6 +18,7 @@ import Input from "@/shared/components/input";
 import ArchiveTasksDialog from "./archive-task-dialog";
 import Checkbox from "@/shared/components/checkbox";
 import DeleteTasksDialog from "./delete-task-dialog";
+import FilterTasksDialog from "./filter-tasks-dialog";
 
 const tasksService: TasksService = new TasksService();
 const auth: Auth = new Auth();
@@ -27,6 +28,7 @@ let taskDao: TaskDao = {};
 let tasksDao: TaskDao[] = [];
 let selectedTaskDto: TaskDto;
 let selectedTasksDto: TaskDto[] = [];
+let taskFilter: TaskFilter = { active: true };
 
 const Tasks: React.FC = () => {
     const { setIsLoading } = useLoaderProvider();
@@ -39,8 +41,8 @@ const Tasks: React.FC = () => {
     const [isDuplicateTaskDialogOpen, setIsDuplicateTaskDialogOpen] = useState<boolean>(false);
     const [isArchiveTasksDialogOpen, setIsArchiveTasksDialogOpen] = useState<boolean>(false);
     const [isDeleteTasksDialogOpen, setIsDeleteTasksDialogOpen] = useState<boolean>(false);
+    const [isFilterTasksDialogOpen, setIsFilterTasksDialogOpen] = useState<boolean>(false);
     const [tasks, setTasks] = useState<TaskDto[]>([]);
-    const [taskFilter, setTaskFilter] = useState<TaskFilter>({ active: true });
 
     useEffect(() => {
         getData();
@@ -75,7 +77,6 @@ const Tasks: React.FC = () => {
     const getTasks = async(): Promise<void> => {
         
         const filter: TaskFilter = { ...taskFilter, userId: user.userId };
-        console.log(filter)
         const tasks: TaskDto[] = await tasksService.getTasks(filter);
 
         setTasks(tasks);
@@ -189,6 +190,11 @@ const Tasks: React.FC = () => {
         setIsDeleteTasksDialogOpen(false);
         await getData();
     }
+
+    const filterTasks = async() => {
+        setIsFilterTasksDialogOpen(false);
+        await getTasks();
+    }
     //#endregion
 
     //#region Open Dialogs
@@ -215,11 +221,15 @@ const Tasks: React.FC = () => {
         if (task !== undefined) selectedTasksDto = [ task ];
         setIsDeleteTasksDialogOpen(true);
     }
+    
+    const openFilterTasksDialog = () => {
+        setIsFilterTasksDialogOpen(true);
+    }
 
     //#endregion
 
     const handleTitleFilter = (value: string) => {
-        setTaskFilter({...taskFilter, title: value});
+        taskFilter = {...taskFilter, title: value};
     }
 
     const toggleIsInSelectableMode = () => {
@@ -237,9 +247,10 @@ const Tasks: React.FC = () => {
         }
     }
 
-    const clearFilter = () => {
-        setTaskFilter({ active: true, userId: user.userId });
-        getTasks();
+    const clearFilter = async() => {
+        taskFilter = { active: true, userId: user.userId };
+        setIsFilterTasksDialogOpen(false);
+        await getTasks();
     }
 
     return (
@@ -255,7 +266,7 @@ const Tasks: React.FC = () => {
                         <IconButton
                             icon={<IoFilter size={30} color="white"/>}
                             className="bg-[var(--secondary)] hover:bg-blue-400 shadow"
-                            onClick={openCreateTaskDialog}
+                            onClick={openFilterTasksDialog}
                         />,
                         <IconButton
                             icon={<IoAdd size={30} color="white"/>}
@@ -415,6 +426,18 @@ const Tasks: React.FC = () => {
                     tasksDao={tasksDao}
                     tasksDto={selectedTasksDto}
                     deleteTask={deleteTasks}
+                />
+            </CustomDialog>
+
+             <CustomDialog
+                setIsOpen={setIsFilterTasksDialogOpen}
+                isOpen={isFilterTasksDialogOpen}
+                title={'Filtrar'}
+            >
+                <FilterTasksDialog
+                    taskFilter={taskFilter}
+                    clearFilter={clearFilter}
+                    getTasks={filterTasks}
                 />
             </CustomDialog>
         </div>

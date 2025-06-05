@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export interface ButtonProps {
+    id?: string;
     className?: string;
     onClick?: () => void;
     onBlur?: () => void;
@@ -9,10 +10,11 @@ export interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = props => {
-    const { className, onClick, onBlur, label, type } = props;
+    const { id, className, onClick, onBlur, label, type } = props;
 
     return (
         <button
+            id={id}
             onClick={onClick}
             onBlur={onBlur}
             className={`Button ${className}`}

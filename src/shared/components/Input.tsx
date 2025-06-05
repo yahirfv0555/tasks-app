@@ -58,8 +58,14 @@ const Input: React.FC<InputProps> = props => {
                 _setValue(value);
             }
 
-            const [year, month, day] = value.split('T')[0].split("-").map(Number);
-            typedValue = new Date(year, month - 1, day);
+            const splittedValue = value.toString().split('T');
+
+            if (value.length === 0) {
+                typedValue = new Date(value);
+            } else {
+                const [year, month, day] = splittedValue[0].split("-").map(Number);
+                typedValue = new Date(year, month - 1, day);
+            }
 
         } else {
             _setValue(value);

@@ -8,5 +8,5 @@ export const cleanBooleanParam = (param?: boolean): string => {
 }
 
 export const cleanDateParam = (param?: Date): string => {
-    return param !== undefined ? param.toDateString() : '';
+    return param !== undefined && param.toString() !== '' ? param.toISOString() : '';
 }
