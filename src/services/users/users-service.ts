@@ -1,6 +1,5 @@
 import ApiService from "@/core/services/api-service";
-import { Execution, LoginExecution, LoginSession, SignupSession } from "@/models";
-
+import { LoginExecution, LoginSession, SignupSession } from "@/models";
 
 class UsersService {
 

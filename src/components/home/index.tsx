@@ -78,7 +78,7 @@ const Home: React.FC = () => {
     const toggleShowingNotesAndDraws = () => setShowingNotesAndDraws(prevValue => !prevValue);
 
     return (
-        <div className="flex flex-col bg-gradient-to-r from-orange-100 via-blue-100 to-purple-100 h-[100dvh] overflow-y-scroll">
+        <div className="flex flex-col bg-gray-100 h-[100dvh] overflow-y-scroll">
              <div className="relative mt-5 mb-10">
                 <div 
                     onClick={toggleShowingTodayTasks} 

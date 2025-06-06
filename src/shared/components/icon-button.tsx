@@ -8,14 +8,16 @@ export interface IconButtonProps {
     icon: ReactNode;
     title?: string;
     type?: "submit" | "reset" | "button" | undefined;
+    disabled?: boolean;
 }
 
 const IconButton: React.FC<IconButtonProps> = props => {
-    const { id, className, onClick, onBlur, icon, title, type } = props;
+    const { id, className, onClick, onBlur, icon, title, type, disabled } = props;
 
     return (
         <button
             id={id}
+            disabled={disabled}
             onClick={onClick}
             onBlur={onBlur}
             className={`Icon-Button ${className}`}

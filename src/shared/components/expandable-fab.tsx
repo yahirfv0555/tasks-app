@@ -1,20 +1,37 @@
 import React, { useEffect, useState } from "react";
-import IconButton, { IconButtonProps } from "./icon-button";
-import { IoAdd, IoArrowForward } from "react-icons/io5";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-
+import IconButton from "./icon-button";
+import { IoIosArrowDown } from "react-icons/io";
+import { usePathname } from "next/navigation";
+import routes from "@/core/config/routes";
+import path from "path";
 
 export interface ExpandableFabProps {
-    iconButtons:  React.ReactElement[];
+    iconButtons: React.ReactElement[];
     iconColor?: string;
 }
 
 const ExpandableFab: React.FC<ExpandableFabProps> = props => {
     const { iconButtons, iconColor } = props;
 
+    const pathname = usePathname();
+
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [showingIconButtons, setShowingIconButtons] = useState<boolean>(false);
+    const [expandibleIconButtonColor, setExpandibleIconButtonColor] = useState<string>('bg-[var(--secondary)]');
 
+    useEffect(() => {
+        console.log(pathname)
+        if (pathname.includes('notes')) {
+            console.log('hola')
+            setExpandibleIconButtonColor(`bg-green-400`);
+        } else if (pathname.includes('tasks')) {
+            setExpandibleIconButtonColor(`bg-blue-400`);
+        } else if (pathname.includes('draws')) {
+            setExpandibleIconButtonColor(`bg-purple-400`);
+        }
+        
+    }, []);
+    
     useEffect(() => {
         setTimeout(() => {
             setShowingIconButtons(isExpanded);
@@ -50,7 +67,7 @@ const ExpandableFab: React.FC<ExpandableFabProps> = props => {
                         }`}
                     />
                 }
-                className="bg-blue-400 shadow"
+                className={`${expandibleIconButtonColor} shadow`}
                 onClick={toggleAreIconButtonsVisible}
             />
         </div>

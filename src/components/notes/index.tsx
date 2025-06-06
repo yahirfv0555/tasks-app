@@ -1,47 +1,47 @@
 import routes from "@/core/config/routes";
 import Auth from "@/core/middleware/auth";
-import TasksService from "@/services/tasks/tasks-service";
+import NotesService from "@/services/notes/notes-service";
 import Input from "@/shared/components/input";
-import ArchiveTasksDialog from "./archive-tasks-dialog";
+import ArchiveNotesDialog from "./archive-notes-dialog";
 import Checkbox from "@/shared/components/checkbox";
-import TaskItem from "./task-item";
-import CreateTaskDialog from "./create-task-dialog";
-import DeleteTasksDialog from "./delete-tasks-dialog";
-import UpdateTaskDialog from "./update-task-dialog";
-import FilterTasksDialog from "./filter-tasks-dialog";
 import ModuleTemplate from "@/shared/components/module-template";
 import CustomDialog from "@/shared/components/custom-dialog";
 import IconButton from "@/shared/components/icon-button";
+import NoteItem from "./note-item";
+import DeleteNotesDialog from "./delete-notes-dialog";
+import CreateNoteDialog from "./create-note-dialog";
+import FilterNotesDialog from "./filter-notes-dialog";
+import UpdateNoteDialog from "./update-note-dialog";
 import { useEffect, useState } from "react";
 import { IoAdd, IoArchive, IoCheckboxOutline, IoFilter, IoSearch, IoTrash } from "react-icons/io5";
 import { useMessageProvider } from "@/providers/messages/message-provider";
 import { useLoaderProvider } from "@/providers/loader/loader-provider";
 import { Execution, UserDto } from "@/models";
-import { TaskDao, TaskDto, TaskFilter } from "@/models/task";
+import { NoteDao, NoteDto, NoteFilter } from "@/models/note";
 
-const tasksService: TasksService = new TasksService();
+const notesService: NotesService = new NotesService();
 const auth: Auth = new Auth();
 
 let user: UserDto = {};
-let taskDao: TaskDao = {};
-let tasksDao: TaskDao[] = [];
-let selectedTaskDto: TaskDto;
-let selectedTasksDto: TaskDto[] = [];
-let taskFilter: TaskFilter = { active: true };
+let noteDao: NoteDao = {};
+let notesDao: NoteDao[] = [];
+let selectedNoteDto: NoteDto;
+let selectedNotesDto: NoteDto[] = [];
+let noteFilter: NoteFilter = { active: true };
 
-const Tasks: React.FC = () => {
+const Notes: React.FC = () => {
     const { setIsLoading } = useLoaderProvider();
     const { setMessage } = useMessageProvider();
 
     const [isInSelectableMode, setIsInSelectableMode] = useState<boolean>(false);
     const [showingCheckboxes, setShowingCheckboxes] = useState<boolean>(false);
-    const [isCreateTaskDialogOpen, setIsCreateTaskDialogOpen] = useState<boolean>(false);
-    const [isUpdateTaskDialogOpen, setIsUpdateTaskDialogOpen] = useState<boolean>(false);
-    const [isDuplicateTaskDialogOpen, setIsDuplicateTaskDialogOpen] = useState<boolean>(false);
-    const [isArchiveTasksDialogOpen, setIsArchiveTasksDialogOpen] = useState<boolean>(false);
-    const [isDeleteTasksDialogOpen, setIsDeleteTasksDialogOpen] = useState<boolean>(false);
-    const [isFilterTasksDialogOpen, setIsFilterTasksDialogOpen] = useState<boolean>(false);
-    const [tasks, setTasks] = useState<TaskDto[]>([]);
+    const [isCreateNoteDialogOpen, setIsCreateNoteDialogOpen] = useState<boolean>(false);
+    const [isUpdateNoteDialogOpen, setIsUpdateNoteDialogOpen] = useState<boolean>(false);
+    const [isDuplicateNoteDialogOpen, setIsDuplicateNoteDialogOpen] = useState<boolean>(false);
+    const [isArchiveNotesDialogOpen, setIsArchiveNotesDialogOpen] = useState<boolean>(false);
+    const [isDeleteNotesDialogOpen, setIsDeleteNotesDialogOpen] = useState<boolean>(false);
+    const [isFilterNotesDialogOpen, setIsFilterNotesDialogOpen] = useState<boolean>(false);
+    const [notes, setNotes] = useState<NoteDto[]>([]);
 
     useEffect(() => {
         getData();
@@ -58,7 +58,7 @@ const Tasks: React.FC = () => {
         setIsLoading(true);
 
         getUser();
-        await getTasks();
+        await getNotes();
 
         setIsLoading(false);
     }
@@ -73,23 +73,23 @@ const Tasks: React.FC = () => {
         user = userAux;
     }
 
-    const getTasks = async(): Promise<void> => {
+    const getNotes = async(): Promise<void> => {
         
-        const filter: TaskFilter = { ...taskFilter, userId: user.userId };
-        const tasks: TaskDto[] = await tasksService.getTasks(filter);
+        const filter: NoteFilter = { ...noteFilter, userId: user.userId };
+        const notes: NoteDto[] = await notesService.getNotes(filter);
 
-        setTasks(tasks);
+        setNotes(notes);
     }
 
-    const createTask = async(_taskDao?: TaskDao, executeGetData?: boolean): Promise<void> => {
-        _taskDao = _taskDao ?? taskDao;
+    const createNote = async(_noteDao?: NoteDao, executeGetData?: boolean): Promise<void> => {
+        _noteDao = _noteDao ?? noteDao;
 
         setIsLoading(true);
 
-        const execution: Execution = await tasksService.createTask(_taskDao);
+        const execution: Execution = await notesService.createNote(_noteDao);
 
-        setIsCreateTaskDialogOpen(false);
-        setIsDuplicateTaskDialogOpen(false);
+        setIsCreateNoteDialogOpen(false);
+        setIsDuplicateNoteDialogOpen(false);
 
         if (execution.successful === true) {
 
@@ -111,14 +111,14 @@ const Tasks: React.FC = () => {
         setIsLoading(false);
     }
 
-    const updateTask = async(_taskDao?: TaskDao, executeGetData?: boolean): Promise<void> => {
-        _taskDao = _taskDao ?? taskDao;
+    const updateNote = async(_noteDao?: NoteDao, executeGetData?: boolean): Promise<void> => {
+        _noteDao = _noteDao ?? noteDao;
 
         setIsLoading(true);
         
-        const execution: Execution = await tasksService.updateTask(_taskDao);
+        const execution: Execution = await notesService.updateNote(_noteDao);
 
-        setIsUpdateTaskDialogOpen(false);
+        setIsUpdateNoteDialogOpen(false);
 
         if (execution.successful === true) {
 
@@ -140,13 +140,13 @@ const Tasks: React.FC = () => {
         setIsLoading(false);
     }
 
-    const deleteTask = async(filter: TaskFilter, executeGetData?: boolean): Promise<void> => {
+    const deleteNote = async(filter: NoteFilter, executeGetData?: boolean): Promise<void> => {
 
         setIsLoading(true);
         
-        const execution: Execution = await tasksService.deleteTask(filter);
+        const execution: Execution = await notesService.deleteNote(filter);
 
-        setIsUpdateTaskDialogOpen(false);
+        setIsUpdateNoteDialogOpen(false);
 
         if (execution.successful === true) {
 
@@ -168,109 +168,109 @@ const Tasks: React.FC = () => {
         setIsLoading(false);
     }
 
-    const archiveTasks = async() => {
+    const archiveNotes = async() => {
         await Promise.all(
-            tasksDao.map(taskDao => updateTask(taskDao, false))
+            notesDao.map(noteDao => updateNote(noteDao, false))
         );
-        tasksDao = [];
-        selectedTasksDto = [];
+        notesDao = [];
+        selectedNotesDto = [];
         setIsInSelectableMode(false);
-        setIsArchiveTasksDialogOpen(false);
+        setIsArchiveNotesDialogOpen(false);
         await getData();
     }
 
-    const deleteTasks = async() => {
+    const deleteNotes = async() => {
         await Promise.all(
-            tasksDao.map(taskDao => deleteTask({ taskId: taskDao.taskId }, false))
+            notesDao.map(noteDao => deleteNote({ noteId: noteDao.noteId }, false))
         );
-        tasksDao = [];
-        selectedTasksDto = [];
+        notesDao = [];
+        selectedNotesDto = [];
         setIsInSelectableMode(false);
-        setIsDeleteTasksDialogOpen(false);
+        setIsDeleteNotesDialogOpen(false);
         await getData();
     }
 
-    const filterTasks = async() => {
-        setIsFilterTasksDialogOpen(false);
-        await getTasks();
+    const filterNotes = async() => {
+        setIsFilterNotesDialogOpen(false);
+        await getNotes();
     }
     //#endregion
 
     //#region Open Dialogs
-    const openCreateTaskDialog = () => {
-        setIsCreateTaskDialogOpen(true);
+    const openCreateNoteDialog = () => {
+        setIsCreateNoteDialogOpen(true);
     }
 
-    const openUpdateTaskDialog = (task: TaskDto) => {
-        selectedTaskDto = { ...task };
-        setIsUpdateTaskDialogOpen(true);
+    const openUpdateNoteDialog = (note: NoteDto) => {
+        selectedNoteDto = { ...note };
+        setIsUpdateNoteDialogOpen(true);
     }
 
-    const openDuplicateTaskDialog = (task: TaskDto) => {
-        selectedTaskDto = { ...task };
-        setIsDuplicateTaskDialogOpen(true);
+    const openDuplicateNoteDialog = (note: NoteDto) => {
+        selectedNoteDto = { ...note };
+        setIsDuplicateNoteDialogOpen(true);
     }
 
-    const openArchiveTaskDialog = (task?: TaskDto) => {
-        if (task !== undefined) selectedTasksDto = [ task ];
-        setIsArchiveTasksDialogOpen(true);
+    const openArchiveNoteDialog = (note?: NoteDto) => {
+        if (note !== undefined) selectedNotesDto = [ note ];
+        setIsArchiveNotesDialogOpen(true);
     }
 
-    const openDeleteTaskDialog = (task?: TaskDto) => {
-        if (task !== undefined) selectedTasksDto = [ task ];
-        setIsDeleteTasksDialogOpen(true);
+    const openDeleteNoteDialog = (note?: NoteDto) => {
+        if (note !== undefined) selectedNotesDto = [ note ];
+        setIsDeleteNotesDialogOpen(true);
     }
     
-    const openFilterTasksDialog = () => {
-        setIsFilterTasksDialogOpen(true);
+    const openFilterNotesDialog = () => {
+        setIsFilterNotesDialogOpen(true);
     }
 
     //#endregion
 
     const handleTitleFilter = (value: string) => {
-        taskFilter = {...taskFilter, title: value};
+        noteFilter = {...noteFilter, title: value};
     }
 
     const toggleIsInSelectableMode = () => {
-        selectedTasksDto = [];
-        tasksDao = [];
+        selectedNotesDto = [];
+        notesDao = [];
         setIsInSelectableMode(prevValue => !prevValue);
     }
 
-    const onChangeSelectCheckbox = (event: React.ChangeEvent<HTMLInputElement>, task: TaskDto) => {
-        if (selectedTasksDto.some((taskDto: TaskDto) => taskDto.taskId === task.taskId) === true) {
-            const _selectedTaskDto: TaskDto[] = selectedTasksDto.filter((taskDto: TaskDto) => taskDto.taskId !== task.taskId);
-            selectedTasksDto = [ ..._selectedTaskDto ];
+    const onChangeSelectCheckbox = (event: React.ChangeEvent<HTMLInputElement>, note: NoteDto) => {
+        if (selectedNotesDto.some((noteDto: NoteDto) => noteDto.noteId === note.noteId) === true) {
+            const _selectedNoteDto: NoteDto[] = selectedNotesDto.filter((noteDto: NoteDto) => noteDto.noteId !== note.noteId);
+            selectedNotesDto = [ ..._selectedNoteDto ];
         } else {
-            selectedTasksDto.push({ ...task });
+            selectedNotesDto.push({ ...note });
         }
     }
 
     const clearFilter = async() => {
-        taskFilter = { active: true, userId: user.userId };
-        setIsFilterTasksDialogOpen(false);
-        await getTasks();
+        noteFilter = { active: true, userId: user.userId };
+        setIsFilterNotesDialogOpen(false);
+        await getNotes();
     }
 
     return (
         <ModuleTemplate 
-            openCreateDialog={openCreateTaskDialog}
-            route={routes[1]}
+            openCreateDialog={openCreateNoteDialog}
+            route={routes[0]}
             actions={[
                 <IconButton
                     icon={<IoCheckboxOutline size={30} color="white"/>}
-                    className="bg-[var(--secondary)] hover:bg-blue-400 shadow"
+                    className="bg-[var(--secondary)] hover:bg-green-400 shadow"
                     onClick={toggleIsInSelectableMode}
                 />,
                 <IconButton
                     icon={<IoFilter size={30} color="white"/>}
-                    className="bg-[var(--secondary)] hover:bg-blue-400 shadow"
-                    onClick={openFilterTasksDialog}
+                    className="bg-[var(--secondary)] hover:bg-green-400 shadow"
+                    onClick={openFilterNotesDialog}
                 />,
                 <IconButton
                     icon={<IoAdd size={30} color="white"/>}
-                    className="bg-[var(--secondary)] hover:bg-blue-400 shadow"
-                    onClick={openCreateTaskDialog}
+                    className="bg-[var(--secondary)] hover:bg-green-400 shadow"
+                    onClick={openCreateNoteDialog}
                 />
             ]}
         >
@@ -286,7 +286,7 @@ const Tasks: React.FC = () => {
                         iconButton={
                             <IconButton
                                 id={'search-form'}
-                                onClick={getTasks}
+                                onClick={getNotes}
                                 icon={<IoSearch size={20} color="gray"/>}
                             />
                         }
@@ -303,19 +303,19 @@ const Tasks: React.FC = () => {
                         className="bg-yellow-200 shadow"
                         icon={<IoArchive size={20} color="white"/>}
                         title="Archivar"
-                        onClick={() => isInSelectableMode === true ? openArchiveTaskDialog() : {}}
+                        onClick={() => isInSelectableMode === true ? openArchiveNoteDialog() : {}}
                     />
                     <IconButton
                         className="bg-red-400 shadow"
                         icon={<IoTrash size={20} color="white"/>}
                         title="Eliminar"
-                        onClick={() => isInSelectableMode === true ? openDeleteTaskDialog() : {}}
+                        onClick={() => isInSelectableMode === true ? openDeleteNoteDialog() : {}}
                     />
                 </div>
             </div>
 
-            {tasks.map(
-                (task: TaskDto, index: number) => (
+            {notes.map(
+                (note: NoteDto, index: number) => (
                     <div 
                         key={index} 
                         className="relative flex flex-row justify-center w-full items-center"
@@ -327,93 +327,93 @@ const Tasks: React.FC = () => {
                                     transform transition-all duration-300 ease-in-out
                                     ${isInSelectableMode === true ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}
                                 `}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => onChangeSelectCheckbox(event, task)}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => onChangeSelectCheckbox(event, note)}
                             />
                         }
-                        <TaskItem 
-                            openUpdateDialog={openUpdateTaskDialog} 
-                            openDuplicateDialog={openDuplicateTaskDialog}
-                            openArchiveDialog={openArchiveTaskDialog}
-                            openDeleteDialog={openDeleteTaskDialog}
+                        <NoteItem 
+                            openUpdateDialog={openUpdateNoteDialog} 
+                            openDuplicateDialog={openDuplicateNoteDialog}
+                            openArchiveDialog={openArchiveNoteDialog}
+                            openDeleteDialog={openDeleteNoteDialog}
                             disabled={isInSelectableMode}
-                            {...task} 
+                            {...note} 
                         />
                     </div>
                 )
             )}
 
             <CustomDialog
-                    isOpen={isCreateTaskDialogOpen}
-                    setIsOpen={setIsCreateTaskDialogOpen}
+                    isOpen={isCreateNoteDialogOpen}
+                    setIsOpen={setIsCreateNoteDialogOpen}
                     title="Crear Pendiente"
                 >
-                <CreateTaskDialog 
-                    createTask={createTask} 
-                    taskDao={taskDao}
+                <CreateNoteDialog 
+                    createNote={createNote} 
+                    noteDao={noteDao}
                 /> 
             </CustomDialog>
             
             <CustomDialog
-                isOpen={isUpdateTaskDialogOpen}
-                setIsOpen={setIsUpdateTaskDialogOpen}
+                isOpen={isUpdateNoteDialogOpen}
+                setIsOpen={setIsUpdateNoteDialogOpen}
                 title="Editar Pendiente"
             >
-                <UpdateTaskDialog
-                    updateTask={updateTask} 
-                    taskDao={taskDao}
-                    taskDto={selectedTaskDto}
+                <UpdateNoteDialog
+                    updateNote={updateNote} 
+                    noteDao={noteDao}
+                    noteDto={selectedNoteDto}
                 /> 
             </CustomDialog>
 
             <CustomDialog
-                    isOpen={isDuplicateTaskDialogOpen}
-                    setIsOpen={setIsDuplicateTaskDialogOpen}
+                    isOpen={isDuplicateNoteDialogOpen}
+                    setIsOpen={setIsDuplicateNoteDialogOpen}
                     title="Crear Pendiente"
                 >
-                <CreateTaskDialog
-                    createTask={createTask} 
-                    taskDao={taskDao}
-                    taskDto={selectedTaskDto}
+                <CreateNoteDialog
+                    createNote={createNote} 
+                    noteDao={noteDao}
+                    noteDto={selectedNoteDto}
                 /> 
             </CustomDialog>
 
             <CustomDialog
-                setIsOpen={setIsArchiveTasksDialogOpen}
-                isOpen={isArchiveTasksDialogOpen}
-                title={selectedTasksDto.length === 1 ? 'Archivar Pendiente' : 'Archivar Pendientes'}
+                setIsOpen={setIsArchiveNotesDialogOpen}
+                isOpen={isArchiveNotesDialogOpen}
+                title={selectedNotesDto.length === 1 ? 'Archivar Pendiente' : 'Archivar Pendientes'}
             >
-                <ArchiveTasksDialog
-                    tasksDao={tasksDao}
-                    tasksDto={selectedTasksDto}
-                    archiveTask={archiveTasks}
+                <ArchiveNotesDialog
+                    notesDao={notesDao}
+                    notesDto={selectedNotesDto}
+                    archiveNote={archiveNotes}
                 />
             </CustomDialog>
 
             <CustomDialog
-                setIsOpen={setIsDeleteTasksDialogOpen}
-                isOpen={isDeleteTasksDialogOpen}
-                title={selectedTasksDto.length === 1 ? 'Eliminar Pendiente' : 'Eliminar Pendientes'}
+                setIsOpen={setIsDeleteNotesDialogOpen}
+                isOpen={isDeleteNotesDialogOpen}
+                title={selectedNotesDto.length === 1 ? 'Eliminar Pendiente' : 'Eliminar Pendientes'}
             >
-                <DeleteTasksDialog
-                    tasksDao={tasksDao}
-                    tasksDto={selectedTasksDto}
-                    deleteTask={deleteTasks}
+                <DeleteNotesDialog
+                    notesDao={notesDao}
+                    notesDto={selectedNotesDto}
+                    deleteNote={deleteNotes}
                 />
             </CustomDialog>
 
              <CustomDialog
-                setIsOpen={setIsFilterTasksDialogOpen}
-                isOpen={isFilterTasksDialogOpen}
+                setIsOpen={setIsFilterNotesDialogOpen}
+                isOpen={isFilterNotesDialogOpen}
                 title={'Filtrar'}
             >
-                <FilterTasksDialog
-                    taskFilter={taskFilter}
+                <FilterNotesDialog
+                    noteFilter={noteFilter}
                     clearFilter={clearFilter}
-                    getTasks={filterTasks}
+                    getNotes={filterNotes}
                 />
             </CustomDialog>
         </ModuleTemplate>
     );
 }
 
-export default Tasks;
+export default Notes;

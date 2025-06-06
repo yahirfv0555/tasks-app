@@ -1,46 +1,44 @@
 import Auth from "@/core/middleware/auth";
 import ApiService from "@/core/services/api-service";
 import { Execution } from "@/models";
-import { TaskDao, TaskDto, TaskFilter } from "@/models/task";
-import { cleanBooleanParam, cleanDateParam, cleanParam } from "@/shared/functions/cleanParams";
+import { NoteDao, NoteDto, NoteFilter } from "@/models/note";
+import { cleanBooleanParam, cleanParam } from "@/shared/functions/cleanParams";
 
 const auth: Auth = new Auth();
 
-class TasksService {
+class NotesService {
 
-    private section: string = 'tasks/';
+    private section: string = 'notes/';
     private apiService: ApiService;
     
     constructor() {
         this.apiService = new ApiService();
     }
 
-    public getTasks = async(filter: TaskFilter): Promise<TaskDto[]> => {
-        const tasks: TaskDto[] = await this.apiService.get(`${this.section}
+    public getNotes = async(filter: NoteFilter): Promise<NoteDto[]> => {
+        const tasks: NoteDto[] = await this.apiService.get(`${this.section}
             ?userId=${cleanParam(filter.userId)}
             &title=${cleanParam(filter.title)}
             &active=${cleanBooleanParam(filter.active)}
-            &date=${cleanDateParam(filter.date)}
-            &fromDate=${cleanDateParam(filter.fromDate)}
         `);
         return tasks;
     }
 
-    public createTask = async(task: TaskDao): Promise<Execution> => {
+    public createNote = async(task: NoteDao): Promise<Execution> => {
         const execution: Execution = await this.apiService.post(task, `${this.section}`);
         return execution;
     }
 
-    public updateTask = async(task: TaskDao): Promise<Execution> => {
+    public updateNote = async(task: NoteDao): Promise<Execution> => {
         const execution: Execution = await this.apiService.put(task, `${this.section}`);
         return execution;
     }
 
-    public deleteTask = async(filter: TaskFilter): Promise<Execution> => {
+    public deleteNote = async(filter: NoteFilter): Promise<Execution> => {
         const execution: Execution = await this.apiService.delete(filter, `${this.section}`);
         return execution;
     }
 
 }
 
-export default TasksService;
+export default NotesService;

@@ -7,7 +7,7 @@ const routes: AppRoute[] = [
         route: 'notes',
         imagePath: '/assets/img/notes-icon.png',
         description: 'Guarda notas sobre ideas, conceptos, apuntes, etc. para recordarlos o copiarlos de manera fácil y rápida',
-        color: '#fb923c'
+        color: '#4ade80'
     },
     {
         name: 'Pendientes',
