@@ -1,9 +1,11 @@
 import { NoteDto } from "@/models/note";
+import { useMessageProvider } from "@/providers/message/message-provider";
 import IconButton from "@/shared/components/icon-button";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { ImPaste } from "react-icons/im";
 import { IoIosArrowBack, IoIosArrowDropleft, IoIosArrowDropleftCircle } from "react-icons/io";
-import { IoArchive, IoCopy, IoPencil, IoRemove, IoTrash } from "react-icons/io5";
+import { IoArchive, IoCopy, IoDuplicate, IoPencil, IoRemove, IoTrash } from "react-icons/io5";
 import SlideDown from "react-slidedown";
 import 'react-slidedown/lib/slidedown.css';
 
@@ -17,7 +19,9 @@ export interface NoteItemProps extends NoteDto {
 }
 
 const NoteItem: React.FC<NoteItemProps> = props => {
-    const { openUpdateDialog, openDuplicateDialog, openArchiveDialog, openDeleteDialog, disabled, title, description, className} = props;
+    const { openUpdateDialog, openDuplicateDialog, openArchiveDialog, openDeleteDialog, className, disabled, title, description, tag } = props;
+
+    const { setMessage } = useMessageProvider();
 
     const [showingMore, setShowingMore] = useState<boolean>(false);
     const [showingToolBar, setShowingToolBar] = useState<boolean>(false);
@@ -47,17 +51,34 @@ const NoteItem: React.FC<NoteItemProps> = props => {
         openDeleteDialog(props);
     }
 
+    const copyDescription = async(event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation(); 
+        try {
+            await navigator.clipboard.writeText(description)
+            setMessage({
+                type: 'success',
+                message: 'Nota copiada',
+            });
+        } catch(error) {
+            setMessage({
+                type: 'warning',
+                message: 'No fue posible copiar la nota',
+            });
+        }
+
+    }
+
     return (
         <div 
             className={`
-                w-full flex flex-col mb-4 rounded-md cursor-pointer text-white px-6
+                w-full flex flex-row justify-between items-center mb-4 rounded-md cursor-pointer text-white px-6
                 ${showingMore === false ? 'bg-green-400 hover:bg-[var(--secondary)]' : 'bg-green-300 hover:bg-green-200'} 
                 transition-all duration-300 ease-in-out transition-colors ${className}
                 shadow-sm hover:shadow-md
             `} 
             onClick={disabled === true ? undefined : toggleShowingMore}
         >
-            <div className="relative flex flex-row justify-between items-center transition-all duration-300 ease-in-out overflow-x-hidden">
+            <div className="w-[96%] relative flex flex-row justify-between items-center transition-all duration-300 ease-in-out overflow-x-hidden">
                 <div className="w-[60%] py-2">
                     <p>
                         {title}
@@ -86,8 +107,8 @@ const NoteItem: React.FC<NoteItemProps> = props => {
                             ${showingMore === true || showingToolBar == true ? 'bg-orange-300 rounded-l-md ' : 'bg-orange-300 rounded-md '}
                         `}
                     >
-                        <div className="flex flex-row justify-end w-[65%]">
-                            {''}
+                        <div className="flex flex-row justify-end w-[55%]">
+                            {tag}
                         </div>
                         {showingToolBar === false && showingMore === false &&
                             <div className="h-[100%] ml-[15%] w-[20%] border-l-1 border-white bg-orange-300 flex flex-row justify-center items-center rounded-r-md">
@@ -109,7 +130,7 @@ const NoteItem: React.FC<NoteItemProps> = props => {
                         />
                         <IconButton
                             className="bg-green-400"
-                            icon={<IoCopy size={15} color="white"/>}
+                            icon={<IoDuplicate size={15} color="white"/>}
                             title="Duplicar"
                             onClick={_openDuplicateDialog}
                         />
@@ -127,6 +148,13 @@ const NoteItem: React.FC<NoteItemProps> = props => {
                         />
                     </div>
                 </div>
+            </div>
+            <div className="w-[3%] flex flex-row justify-center">
+                <IconButton
+                    className="bg-white"
+                    icon={<IoCopy color="#4ade80"/>}
+                    onClick={copyDescription}
+                />
             </div>
            
         </div>

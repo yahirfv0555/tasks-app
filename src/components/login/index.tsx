@@ -1,6 +1,6 @@
 import Auth from "@/core/middleware/auth";
 import { LoginExecution, LoginSession } from "@/models";
-import { useMessageProvider } from "@/providers/messages/message-provider";
+import { useMessageProvider } from "@/providers/message/message-provider";
 import UsersService from "@/services/users/users-service";
 import Button from "@/shared/components/button";
 import Input from "@/shared/components/input";

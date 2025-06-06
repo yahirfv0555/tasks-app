@@ -5,6 +5,11 @@ export interface NoteDto {
     title: string;
     userId: string;
     userName: string;
+    tag: string;
+}
+
+export interface TagDto {
+    tag: string;
 }
 
 export interface NoteDao {
@@ -14,6 +19,7 @@ export interface NoteDao {
     modificatedBy?: number;
     title?: string;
     userId?: number;
+    tag?: string;
 }
 
 export interface NoteFilter {
@@ -21,4 +27,10 @@ export interface NoteFilter {
     active?: boolean;
     userId?: number;
     title?: string;
+    tags?: string;
+}
+
+export interface TagFilter {
+    userId?: number;
+    tags?: string;
 }

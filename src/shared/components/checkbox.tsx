@@ -26,7 +26,7 @@ const Checkbox: React.FC<ChecboxProps> = props => {
     return (
         <div className={`w-min h-min flex flex-col jutify-center bg-white ${containerClassName}`}>
             <input
-                className={`accent-[var(--secondary)] hover:accent-blue-400 ${className}`}
+                className={`accent-[var(--secondary)] ${className}`}
                 checked={_value}
                 onChange={_onChange}
                 type="checkbox"

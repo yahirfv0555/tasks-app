@@ -40,7 +40,7 @@ export const MessageProvider = ({ children }: { children: React.ReactNode }) => 
           exit="exit"
           variants={variants}
           transition={{ duration: 0.5 }}
-          className="absolute top-4 right-4"
+          className="fixed top-4 right-4"
         >
           <Message {...message}/>
         </motion.div>

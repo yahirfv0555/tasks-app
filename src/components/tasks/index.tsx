@@ -14,7 +14,7 @@ import CustomDialog from "@/shared/components/custom-dialog";
 import IconButton from "@/shared/components/icon-button";
 import { useEffect, useState } from "react";
 import { IoAdd, IoArchive, IoCheckboxOutline, IoFilter, IoSearch, IoTrash } from "react-icons/io5";
-import { useMessageProvider } from "@/providers/messages/message-provider";
+import { useMessageProvider } from "@/providers/message/message-provider";
 import { useLoaderProvider } from "@/providers/loader/loader-provider";
 import { Execution, UserDto } from "@/models";
 import { TaskDao, TaskDto, TaskFilter } from "@/models/task";
@@ -324,6 +324,7 @@ const Tasks: React.FC = () => {
                             <Checkbox
                                 containerClassName="mb-3 mr-3"
                                 className={`
+                                    hover:accent-blue-400
                                     transform transition-all duration-300 ease-in-out
                                     ${isInSelectableMode === true ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}
                                 `}

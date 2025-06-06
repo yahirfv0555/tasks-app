@@ -14,7 +14,7 @@ import FilterNotesDialog from "./filter-notes-dialog";
 import UpdateNoteDialog from "./update-note-dialog";
 import { useEffect, useState } from "react";
 import { IoAdd, IoArchive, IoCheckboxOutline, IoFilter, IoSearch, IoTrash } from "react-icons/io5";
-import { useMessageProvider } from "@/providers/messages/message-provider";
+import { useMessageProvider } from "@/providers/message/message-provider";
 import { useLoaderProvider } from "@/providers/loader/loader-provider";
 import { Execution, UserDto } from "@/models";
 import { NoteDao, NoteDto, NoteFilter } from "@/models/note";
@@ -113,6 +113,8 @@ const Notes: React.FC = () => {
 
     const updateNote = async(_noteDao?: NoteDao, executeGetData?: boolean): Promise<void> => {
         _noteDao = _noteDao ?? noteDao;
+
+        console.log(_noteDao);
 
         setIsLoading(true);
         
@@ -324,6 +326,7 @@ const Notes: React.FC = () => {
                             <Checkbox
                                 containerClassName="mb-3 mr-3"
                                 className={`
+                                    hover:accent-green-300
                                     transform transition-all duration-300 ease-in-out
                                     ${isInSelectableMode === true ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}
                                 `}

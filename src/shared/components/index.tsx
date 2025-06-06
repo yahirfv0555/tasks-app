@@ -6,3 +6,4 @@ export * from './textarea';
 export * from './custom-dialog';
 export * from './expandable-fab';
 export * from './error-message';
+export * from './select';

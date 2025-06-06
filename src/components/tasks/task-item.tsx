@@ -3,7 +3,7 @@ import IconButton from "@/shared/components/icon-button";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { IoIosArrowBack, IoIosArrowDropleft, IoIosArrowDropleftCircle } from "react-icons/io";
-import { IoArchive, IoCopy, IoPencil, IoRemove, IoTrash } from "react-icons/io5";
+import { IoArchive, IoCopy, IoDuplicate, IoPencil, IoRemove, IoTrash } from "react-icons/io5";
 import SlideDown from "react-slidedown";
 import 'react-slidedown/lib/slidedown.css';
 
@@ -109,7 +109,7 @@ const TaskItem: React.FC<TaskItemProps> = props => {
                         />
                         <IconButton
                             className="bg-green-400"
-                            icon={<IoCopy size={15} color="white"/>}
+                            icon={<IoDuplicate size={15} color="white"/>}
                             title="Duplicar"
                             onClick={_openDuplicateDialog}
                         />

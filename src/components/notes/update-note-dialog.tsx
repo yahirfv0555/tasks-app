@@ -1,6 +1,5 @@
 import { NoteDao, NoteDto } from "@/models/note";
 import Button from "@/shared/components/button";
-import { ErrorMessageProps } from "@/shared/components/error-message";
 import Input from "@/shared/components/input";
 import TextArea from "@/shared/components/textarea";
 import validateNotNullableData from "@/shared/functions/validate-not-nullable-data";
@@ -23,6 +22,10 @@ const UpdateNoteDialog: React.FC<UpdateNoteDialogProps> = props => {
     const handleTitle = (value: string) => {
         noteDao.title = value;
     }
+
+    const handleTag = (value: string) => {
+        noteDao.tag = value;
+    }
     
     const handleDescription = (value: string) => {
         noteDao.description = value;
@@ -31,6 +34,8 @@ const UpdateNoteDialog: React.FC<UpdateNoteDialogProps> = props => {
 
     //#region Validaciones
     const validateTitle = (value?: string) => validateNotNullableData('título', value);
+    
+    const validateTag = (value?: string) => validateNotNullableData('etiqueta', value);
 
     const validateDescription = (value?: string) => validateNotNullableData('descripción', value)
 
@@ -51,6 +56,15 @@ const UpdateNoteDialog: React.FC<UpdateNoteDialogProps> = props => {
                     label="Título"
                     containerClassName="w-[48%] mb-5"
                     validateData={validateTitle}
+                />
+
+                <Input
+                    setValue={handleTag}
+                    initialValue={noteDto?.tag}
+                    type="text"
+                    label="Etiqueta"
+                    containerClassName="w-[48%] mb-5"
+                    validateData={validateTag}
                 />
             </div>
             

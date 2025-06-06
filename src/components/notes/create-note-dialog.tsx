@@ -21,6 +21,10 @@ const CreateNoteDialog: React.FC<CreateNoteDialogProps> = props => {
     const handleTitle = (value: string) => {
         noteDao.title = value;
     }
+
+    const handleTag = (value: string) => {
+        noteDao.tag = value;
+    }
     
     const handleDescription = (value: string) => {
         noteDao.description = value;
@@ -29,6 +33,8 @@ const CreateNoteDialog: React.FC<CreateNoteDialogProps> = props => {
 
     //#region Validaciones
     const validateTitle = (value?: string) => validateNotNullableData('título', value);
+
+    const validateTag = (value?: string) => validateNotNullableData('etiqueta', value);
 
     const validateDescription = (value?: string) => validateNotNullableData('descripción', value)
 
@@ -50,6 +56,16 @@ const CreateNoteDialog: React.FC<CreateNoteDialogProps> = props => {
                     containerClassName="w-[48%] mb-5"
                     initialValue={noteDto?.title}
                     validateData={validateTitle}
+                    startValidation={startValidation}
+                />
+
+                <Input
+                    setValue={handleTag}
+                    type="text"
+                    label="Etiqueta"
+                    containerClassName="w-[48%] mb-5"
+                    initialValue={noteDto?.tag}
+                    validateData={validateTag}
                     startValidation={startValidation}
                 />
             </div>

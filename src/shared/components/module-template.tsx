@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { AppRoute } from "@/models/general";
 import ExpandableFab from "./expandable-fab";
+import Link from "next/link";
 
 export interface ModuleTemplateProps {
     route: AppRoute;
@@ -24,7 +25,13 @@ const ModuleTemplate: React.FC<ModuleTemplateProps> = props => {
                     <div className="flex flex-row justify-start">
                         <h1 className="flex flex-col justify-center text-white bg-orange-300 rounded-l-md py-1 px-4 shadows">
                             <span>
-                                <span>{'Inicio > '}</span><span>{route.name}</span>
+                                <Link 
+                                    href={'/'}  
+                                    className="cursor-pointer"
+                                >
+                                    {'Inicio > '}
+                                </Link>
+                                <span>{route.name}</span>
                             </span>
                         </h1>
                         <div className="flex flex-row justify-end items-center px-2 py-1 rounded-r-md bg-orange-300 border-l-2 border-white cursor-pointer hover:bg-blue-300">

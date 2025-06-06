@@ -1,7 +1,7 @@
 import Auth from "@/core/middleware/auth";
 import ApiService from "@/core/services/api-service";
 import { Execution } from "@/models";
-import { NoteDao, NoteDto, NoteFilter } from "@/models/note";
+import { NoteDao, NoteDto, NoteFilter, TagDto, TagFilter } from "@/models/note";
 import { cleanBooleanParam, cleanParam } from "@/shared/functions/cleanParams";
 
 const auth: Auth = new Auth();
@@ -20,6 +20,15 @@ class NotesService {
             ?userId=${cleanParam(filter.userId)}
             &title=${cleanParam(filter.title)}
             &active=${cleanBooleanParam(filter.active)}
+            &tags=${cleanParam(filter.tags)}
+        `);
+        return tasks;
+    }
+
+    public getTags = async(filter: TagFilter): Promise<TagDto[]> => {
+        const tasks: NoteDto[] = await this.apiService.get(`${this.section}tags/
+            ?userId=${cleanParam(filter.userId)}
+            &tags=${cleanParam(filter.tags)}
         `);
         return tasks;
     }
