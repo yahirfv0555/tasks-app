@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MenuItemProps extends AppRoute { }
 
 const MenuItem: React.FC<MenuItemProps> = props => {

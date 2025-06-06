@@ -91,6 +91,8 @@ const Notes: React.FC = () => {
         setIsCreateNoteDialogOpen(false);
         setIsDuplicateNoteDialogOpen(false);
 
+        noteDao = {};
+
         if (execution.successful === true) {
 
             if (executeGetData !== false) await getData();
@@ -121,6 +123,8 @@ const Notes: React.FC = () => {
         const execution: Execution = await notesService.updateNote(_noteDao);
 
         setIsUpdateNoteDialogOpen(false);
+
+        noteDao = {};
 
         if (execution.successful === true) {
 

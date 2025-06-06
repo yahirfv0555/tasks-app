@@ -3,9 +3,7 @@
 import Home from "@/components/home";
 import PrivatePage from "@/routing/private-page";
 
-export interface HomePageProps { }
-
-const HomePage: React.FC<HomePageProps> = () => {
+const HomePage: React.FC = () => {
   return (
     <PrivatePage>
       <Home/>

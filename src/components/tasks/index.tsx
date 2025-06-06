@@ -91,6 +91,8 @@ const Tasks: React.FC = () => {
         setIsCreateTaskDialogOpen(false);
         setIsDuplicateTaskDialogOpen(false);
 
+        taskDao = {};
+
         if (execution.successful === true) {
 
             if (executeGetData !== false) await getData();
@@ -119,6 +121,7 @@ const Tasks: React.FC = () => {
         const execution: Execution = await tasksService.updateTask(_taskDao);
 
         setIsUpdateTaskDialogOpen(false);
+        taskDao = {};
 
         if (execution.successful === true) {
 

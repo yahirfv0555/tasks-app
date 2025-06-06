@@ -37,13 +37,13 @@ class Auth {
     public getUser(): UserDto | undefined {
         const serializedUser: string | null = localStorage.getItem('user');
         if (serializedUser === null) return undefined;
-        return JSON.parse(serializedUser);;
+        return JSON.parse(serializedUser);
     }
 
     public addUserIdToObject(object: any): void {
         if (this.getUser()?.userId === undefined) return;
-        object.userId = this.getUser()?.userId!;
-        object.modificatedBy = this.getUser()?.userId!;
+        object.userId = this.getUser()?.userId;
+        object.modificatedBy = this.getUser()?.userId;
     }
 
     public clearSession(): void {
