@@ -1,7 +1,6 @@
 import Auth from "@/core/middleware/auth";
 import ApiService from "@/core/services/api-service";
-import { Execution } from "@/models";
-import { TaskDao, TaskDto, TaskFilter } from "@/models/task";
+import { TaskDao, TaskDto, TaskFilter, Execution } from "@/models";
 import { cleanBooleanParam, cleanDateParam, cleanParam } from "@/shared/functions/cleanParams";
 
 const auth: Auth = new Auth();

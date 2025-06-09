@@ -1,4 +1,4 @@
-import { TaskDto } from "@/models/task";
+import { TaskDto } from "@/models";
 import IconButton from "@/shared/components/icon-button";
 import dayjs from "dayjs";
 import { useState } from "react";

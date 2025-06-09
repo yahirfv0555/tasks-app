@@ -1,4 +1,4 @@
-import { TaskDao, TaskDto } from "@/models/task";
+import { TaskDao, TaskDto } from "@/models";
 import Button from "@/shared/components/button";
 import { ErrorMessageProps } from "@/shared/components/error-message";
 import Input from "@/shared/components/input";

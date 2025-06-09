@@ -1,6 +1,5 @@
-import { NoteDao, NoteDto } from "@/models/note";
+import { NoteDao, NoteDto } from "@/models";
 import Button from "@/shared/components/button";
-import { ErrorMessageProps } from "@/shared/components/error-message";
 import Input from "@/shared/components/input";
 import TextArea from "@/shared/components/textarea";
 import validateNotNullableData from "@/shared/functions/validate-not-nullable-data";

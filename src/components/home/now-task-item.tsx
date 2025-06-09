@@ -1,4 +1,4 @@
-import { TaskDto } from "@/models/task";
+import { TaskDto } from "@/models";
 import dayjs from "dayjs";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

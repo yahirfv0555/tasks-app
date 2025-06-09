@@ -1,5 +1,4 @@
-import { UserDto } from "@/models";
-import { HttpHeaders } from "@/models/general";
+import { HttpHeaders, UserDto } from "@/models";
 
 class Auth {
 

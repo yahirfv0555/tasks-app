@@ -1,47 +1,47 @@
 import routes from "@/core/config/routes";
 import Auth from "@/core/middleware/auth";
-import TasksService from "@/services/tasks/tasks-service";
+import DrawsService from "@/services/draws/draws-service";
 import Input from "@/shared/components/input";
-import ArchiveTasksDialog from "./archive-tasks-dialog";
+import ArchiveDrawsDialog from "./archive-draws-dialog";
 import Checkbox from "@/shared/components/checkbox";
-import TaskItem from "./task-item";
-import CreateTaskDialog from "./create-task-dialog";
-import DeleteTasksDialog from "./delete-tasks-dialog";
-import UpdateTaskDialog from "./update-task-dialog";
-import FilterTasksDialog from "./filter-tasks-dialog";
 import ModuleTemplate from "@/shared/components/module-template";
 import CustomDialog from "@/shared/components/custom-dialog";
 import IconButton from "@/shared/components/icon-button";
+import DrawItem from "./draw-item";
+import DeleteDrawsDialog from "./delete-draws-dialog";
+import CreateDrawDialog from "./create-draw-dialog";
+import FilterDrawsDialog from "./filter-draws-dialog";
+import UpdateDrawDialog from "./update-draw-dialog";
 import { useEffect, useState } from "react";
 import { IoAdd, IoArchive, IoCheckboxOutline, IoFilter, IoSearch, IoTrash } from "react-icons/io5";
 import { useMessageProvider } from "@/providers/message/message-provider";
 import { useLoaderProvider } from "@/providers/loader/loader-provider";
 import { Execution, UserDto } from "@/models";
-import { TaskDao, TaskDto, TaskFilter } from "@/models";
+import { DrawDao, DrawDto, DrawFilter } from "@/models";
 
-const tasksService: TasksService = new TasksService();
+const drawsService: DrawsService = new DrawsService();
 const auth: Auth = new Auth();
 
 let user: UserDto = {};
-let taskDao: TaskDao = {};
-let tasksDao: TaskDao[] = [];
-let selectedTaskDto: TaskDto;
-let selectedTasksDto: TaskDto[] = [];
-let taskFilter: TaskFilter = { active: true };
+let drawDao: DrawDao = {};
+let drawsDao: DrawDao[] = [];
+let selectedDrawDto: DrawDto;
+let selectedDrawsDto: DrawDto[] = [];
+let drawFilter: DrawFilter = { active: true };
 
-const Tasks: React.FC = () => {
+const Draws: React.FC = () => {
     const { setIsLoading } = useLoaderProvider();
     const { setMessage } = useMessageProvider();
 
     const [isInSelectableMode, setIsInSelectableMode] = useState<boolean>(false);
     const [showingCheckboxes, setShowingCheckboxes] = useState<boolean>(false);
-    const [isCreateTaskDialogOpen, setIsCreateTaskDialogOpen] = useState<boolean>(false);
-    const [isUpdateTaskDialogOpen, setIsUpdateTaskDialogOpen] = useState<boolean>(false);
-    const [isDuplicateTaskDialogOpen, setIsDuplicateTaskDialogOpen] = useState<boolean>(false);
-    const [isArchiveTasksDialogOpen, setIsArchiveTasksDialogOpen] = useState<boolean>(false);
-    const [isDeleteTasksDialogOpen, setIsDeleteTasksDialogOpen] = useState<boolean>(false);
-    const [isFilterTasksDialogOpen, setIsFilterTasksDialogOpen] = useState<boolean>(false);
-    const [tasks, setTasks] = useState<TaskDto[]>([]);
+    const [isCreateDrawDialogOpen, setIsCreateDrawDialogOpen] = useState<boolean>(false);
+    const [isUpdateDrawDialogOpen, setIsUpdateDrawDialogOpen] = useState<boolean>(false);
+    const [isDuplicateDrawDialogOpen, setIsDuplicateDrawDialogOpen] = useState<boolean>(false);
+    const [isArchiveDrawsDialogOpen, setIsArchiveDrawsDialogOpen] = useState<boolean>(false);
+    const [isDeleteDrawsDialogOpen, setIsDeleteDrawsDialogOpen] = useState<boolean>(false);
+    const [isFilterDrawsDialogOpen, setIsFilterDrawsDialogOpen] = useState<boolean>(false);
+    const [draws, setDraws] = useState<DrawDto[]>([]);
 
     useEffect(() => {
         getData();
@@ -58,7 +58,7 @@ const Tasks: React.FC = () => {
         setIsLoading(true);
 
         getUser();
-        await getTasks();
+        await getDraws();
 
         setIsLoading(false);
     }
@@ -73,25 +73,25 @@ const Tasks: React.FC = () => {
         user = userAux;
     }
 
-    const getTasks = async(): Promise<void> => {
+    const getDraws = async(): Promise<void> => {
         
-        const filter: TaskFilter = { ...taskFilter, userId: user.userId };
-        const tasks: TaskDto[] = await tasksService.getTasks(filter);
+        const filter: DrawFilter = { ...drawFilter, userId: user.userId };
+        const draws: DrawDto[] = await drawsService.getDraws(filter);
 
-        setTasks(tasks);
+        setDraws(draws);
     }
 
-    const createTask = async(_taskDao?: TaskDao, executeGetData?: boolean): Promise<void> => {
-        _taskDao = _taskDao ?? taskDao;
+    const createDraw = async(_drawDao?: DrawDao, executeGetData?: boolean): Promise<void> => {
+        _drawDao = _drawDao ?? drawDao;
 
         setIsLoading(true);
 
-        const execution: Execution = await tasksService.createTask(_taskDao);
+        const execution: Execution = await drawsService.createDraw(_drawDao);
 
-        setIsCreateTaskDialogOpen(false);
-        setIsDuplicateTaskDialogOpen(false);
+        setIsCreateDrawDialogOpen(false);
+        setIsDuplicateDrawDialogOpen(false);
 
-        taskDao = {};
+        drawDao = {};
 
         if (execution.successful === true) {
 
@@ -113,15 +113,18 @@ const Tasks: React.FC = () => {
         setIsLoading(false);
     }
 
-    const updateTask = async(_taskDao?: TaskDao, executeGetData?: boolean): Promise<void> => {
-        _taskDao = _taskDao ?? taskDao;
+    const updateDraw = async(_drawDao?: DrawDao, executeGetData?: boolean): Promise<void> => {
+        _drawDao = _drawDao ?? drawDao;
+
+        console.log(_drawDao);
 
         setIsLoading(true);
         
-        const execution: Execution = await tasksService.updateTask(_taskDao);
+        const execution: Execution = await drawsService.updateDraw(_drawDao);
 
-        setIsUpdateTaskDialogOpen(false);
-        taskDao = {};
+        setIsUpdateDrawDialogOpen(false);
+
+        drawDao = {};
 
         if (execution.successful === true) {
 
@@ -143,13 +146,13 @@ const Tasks: React.FC = () => {
         setIsLoading(false);
     }
 
-    const deleteTask = async(filter: TaskFilter, executeGetData?: boolean): Promise<void> => {
+    const deleteDraw = async(filter: DrawFilter, executeGetData?: boolean): Promise<void> => {
 
         setIsLoading(true);
         
-        const execution: Execution = await tasksService.deleteTask(filter);
+        const execution: Execution = await drawsService.deleteDraw(filter);
 
-        setIsUpdateTaskDialogOpen(false);
+        setIsUpdateDrawDialogOpen(false);
 
         if (execution.successful === true) {
 
@@ -171,109 +174,109 @@ const Tasks: React.FC = () => {
         setIsLoading(false);
     }
 
-    const archiveTasks = async() => {
+    const archiveDraws = async() => {
         await Promise.all(
-            tasksDao.map(taskDao => updateTask(taskDao, false))
+            drawsDao.map(drawDao => updateDraw(drawDao, false))
         );
-        tasksDao = [];
-        selectedTasksDto = [];
+        drawsDao = [];
+        selectedDrawsDto = [];
         setIsInSelectableMode(false);
-        setIsArchiveTasksDialogOpen(false);
+        setIsArchiveDrawsDialogOpen(false);
         await getData();
     }
 
-    const deleteTasks = async() => {
+    const deleteDraws = async() => {
         await Promise.all(
-            tasksDao.map(taskDao => deleteTask({ taskId: taskDao.taskId }, false))
+            drawsDao.map(drawDao => deleteDraw({ drawId: drawDao.drawId }, false))
         );
-        tasksDao = [];
-        selectedTasksDto = [];
+        drawsDao = [];
+        selectedDrawsDto = [];
         setIsInSelectableMode(false);
-        setIsDeleteTasksDialogOpen(false);
+        setIsDeleteDrawsDialogOpen(false);
         await getData();
     }
 
-    const filterTasks = async() => {
-        setIsFilterTasksDialogOpen(false);
-        await getTasks();
+    const filterDraws = async() => {
+        setIsFilterDrawsDialogOpen(false);
+        await getDraws();
     }
     //#endregion
 
     //#region Open Dialogs
-    const openCreateTaskDialog = () => {
-        setIsCreateTaskDialogOpen(true);
+    const openCreateDrawDialog = () => {
+        setIsCreateDrawDialogOpen(true);
     }
 
-    const openUpdateTaskDialog = (task: TaskDto) => {
-        selectedTaskDto = { ...task };
-        setIsUpdateTaskDialogOpen(true);
+    const openUpdateDrawDialog = (draw: DrawDto) => {
+        selectedDrawDto = { ...draw };
+        setIsUpdateDrawDialogOpen(true);
     }
 
-    const openDuplicateTaskDialog = (task: TaskDto) => {
-        selectedTaskDto = { ...task };
-        setIsDuplicateTaskDialogOpen(true);
+    const openDuplicateDrawDialog = (draw: DrawDto) => {
+        selectedDrawDto = { ...draw };
+        setIsDuplicateDrawDialogOpen(true);
     }
 
-    const openArchiveTaskDialog = (task?: TaskDto) => {
-        if (task !== undefined) selectedTasksDto = [ task ];
-        setIsArchiveTasksDialogOpen(true);
+    const openArchiveDrawDialog = (draw?: DrawDto) => {
+        if (draw !== undefined) selectedDrawsDto = [ draw ];
+        setIsArchiveDrawsDialogOpen(true);
     }
 
-    const openDeleteTaskDialog = (task?: TaskDto) => {
-        if (task !== undefined) selectedTasksDto = [ task ];
-        setIsDeleteTasksDialogOpen(true);
+    const openDeleteDrawDialog = (draw?: DrawDto) => {
+        if (draw !== undefined) selectedDrawsDto = [ draw ];
+        setIsDeleteDrawsDialogOpen(true);
     }
     
-    const openFilterTasksDialog = () => {
-        setIsFilterTasksDialogOpen(true);
+    const openFilterDrawsDialog = () => {
+        setIsFilterDrawsDialogOpen(true);
     }
 
     //#endregion
 
     const handleTitleFilter = (value: string) => {
-        taskFilter = {...taskFilter, title: value};
+        drawFilter = {...drawFilter, title: value};
     }
 
     const toggleIsInSelectableMode = () => {
-        selectedTasksDto = [];
-        tasksDao = [];
+        selectedDrawsDto = [];
+        drawsDao = [];
         setIsInSelectableMode(prevValue => !prevValue);
     }
 
-    const onChangeSelectCheckbox = (event: React.ChangeEvent<HTMLInputElement>, task: TaskDto) => {
-        if (selectedTasksDto.some((taskDto: TaskDto) => taskDto.taskId === task.taskId) === true) {
-            const _selectedTaskDto: TaskDto[] = selectedTasksDto.filter((taskDto: TaskDto) => taskDto.taskId !== task.taskId);
-            selectedTasksDto = [ ..._selectedTaskDto ];
+    const onChangeSelectCheckbox = (event: React.ChangeEvent<HTMLInputElement>, draw: DrawDto) => {
+        if (selectedDrawsDto.some((drawDto: DrawDto) => drawDto.drawId === draw.drawId) === true) {
+            const _selectedDrawDto: DrawDto[] = selectedDrawsDto.filter((drawDto: DrawDto) => drawDto.drawId !== draw.drawId);
+            selectedDrawsDto = [ ..._selectedDrawDto ];
         } else {
-            selectedTasksDto.push({ ...task });
+            selectedDrawsDto.push({ ...draw });
         }
     }
 
     const clearFilter = async() => {
-        taskFilter = { active: true, userId: user.userId };
-        setIsFilterTasksDialogOpen(false);
-        await getTasks();
+        drawFilter = { active: true, userId: user.userId };
+        setIsFilterDrawsDialogOpen(false);
+        await getDraws();
     }
 
     return (
         <ModuleTemplate 
-            openCreateDialog={openCreateTaskDialog}
-            route={routes[1]}
+            openCreateDialog={openCreateDrawDialog}
+            route={routes[2]}
             actions={[
                 <IconButton
                     icon={<IoCheckboxOutline size={30} color="white"/>}
-                    className="bg-[var(--secondary)] hover:bg-blue-400 shadow"
+                    className="bg-[var(--secondary)] hover:bg-green-400 shadow"
                     onClick={toggleIsInSelectableMode}
                 />,
                 <IconButton
                     icon={<IoFilter size={30} color="white"/>}
-                    className="bg-[var(--secondary)] hover:bg-blue-400 shadow"
-                    onClick={openFilterTasksDialog}
+                    className="bg-[var(--secondary)] hover:bg-green-400 shadow"
+                    onClick={openFilterDrawsDialog}
                 />,
                 <IconButton
                     icon={<IoAdd size={30} color="white"/>}
-                    className="bg-[var(--secondary)] hover:bg-blue-400 shadow"
-                    onClick={openCreateTaskDialog}
+                    className="bg-[var(--secondary)] hover:bg-green-400 shadow"
+                    onClick={openCreateDrawDialog}
                 />
             ]}
         >
@@ -289,7 +292,7 @@ const Tasks: React.FC = () => {
                         iconButton={
                             <IconButton
                                 id={'search-form'}
-                                onClick={getTasks}
+                                onClick={getDraws}
                                 icon={<IoSearch size={20} color="gray"/>}
                             />
                         }
@@ -306,19 +309,19 @@ const Tasks: React.FC = () => {
                         className="bg-yellow-200 shadow"
                         icon={<IoArchive size={20} color="white"/>}
                         title="Archivar"
-                        onClick={() => isInSelectableMode === true ? openArchiveTaskDialog() : {}}
+                        onClick={() => isInSelectableMode === true ? openArchiveDrawDialog() : {}}
                     />
                     <IconButton
                         className="bg-red-400 shadow"
                         icon={<IoTrash size={20} color="white"/>}
                         title="Eliminar"
-                        onClick={() => isInSelectableMode === true ? openDeleteTaskDialog() : {}}
+                        onClick={() => isInSelectableMode === true ? openDeleteDrawDialog() : {}}
                     />
                 </div>
             </div>
 
-            {tasks.map(
-                (task: TaskDto, index: number) => (
+            {draws.map(
+                (draw: DrawDto, index: number) => (
                     <div 
                         key={index} 
                         className="relative flex flex-row justify-center w-full items-center"
@@ -327,97 +330,97 @@ const Tasks: React.FC = () => {
                             <Checkbox
                                 containerClassName="mb-3 mr-3"
                                 className={`
-                                    hover:accent-blue-400
+                                    hover:accent-green-300
                                     transform transition-all duration-300 ease-in-out
                                     ${isInSelectableMode === true ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}
                                 `}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => onChangeSelectCheckbox(event, task)}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => onChangeSelectCheckbox(event, draw)}
                             />
                         }
-                        <TaskItem 
-                            openUpdateDialog={openUpdateTaskDialog} 
-                            openDuplicateDialog={openDuplicateTaskDialog}
-                            openArchiveDialog={openArchiveTaskDialog}
-                            openDeleteDialog={openDeleteTaskDialog}
+                        <DrawItem 
+                            openUpdateDialog={openUpdateDrawDialog} 
+                            openDuplicateDialog={openDuplicateDrawDialog}
+                            openArchiveDialog={openArchiveDrawDialog}
+                            openDeleteDialog={openDeleteDrawDialog}
                             disabled={isInSelectableMode}
-                            {...task} 
+                            {...draw} 
                         />
                     </div>
                 )
             )}
 
             <CustomDialog
-                    isOpen={isCreateTaskDialogOpen}
-                    setIsOpen={setIsCreateTaskDialogOpen}
+                    isOpen={isCreateDrawDialogOpen}
+                    setIsOpen={setIsCreateDrawDialogOpen}
                     title="Crear Pendiente"
                 >
-                <CreateTaskDialog 
-                    createTask={createTask} 
-                    taskDao={taskDao}
+                <CreateDrawDialog 
+                    createDraw={createDraw} 
+                    drawDao={drawDao}
                 /> 
             </CustomDialog>
             
             <CustomDialog
-                isOpen={isUpdateTaskDialogOpen}
-                setIsOpen={setIsUpdateTaskDialogOpen}
+                isOpen={isUpdateDrawDialogOpen}
+                setIsOpen={setIsUpdateDrawDialogOpen}
                 title="Editar Pendiente"
             >
-                <UpdateTaskDialog
-                    updateTask={updateTask} 
-                    taskDao={taskDao}
-                    taskDto={selectedTaskDto}
+                <UpdateDrawDialog
+                    updateDraw={updateDraw} 
+                    drawDao={drawDao}
+                    drawDto={selectedDrawDto}
                 /> 
             </CustomDialog>
 
             <CustomDialog
-                    isOpen={isDuplicateTaskDialogOpen}
-                    setIsOpen={setIsDuplicateTaskDialogOpen}
+                    isOpen={isDuplicateDrawDialogOpen}
+                    setIsOpen={setIsDuplicateDrawDialogOpen}
                     title="Crear Pendiente"
                 >
-                <CreateTaskDialog
-                    createTask={createTask} 
-                    taskDao={taskDao}
-                    taskDto={selectedTaskDto}
+                <CreateDrawDialog
+                    createDraw={createDraw} 
+                    drawDao={drawDao}
+                    drawDto={selectedDrawDto}
                 /> 
             </CustomDialog>
 
             <CustomDialog
-                setIsOpen={setIsArchiveTasksDialogOpen}
-                isOpen={isArchiveTasksDialogOpen}
-                title={selectedTasksDto.length === 1 ? 'Archivar Pendiente' : 'Archivar Pendientes'}
+                setIsOpen={setIsArchiveDrawsDialogOpen}
+                isOpen={isArchiveDrawsDialogOpen}
+                title={selectedDrawsDto.length === 1 ? 'Archivar Pendiente' : 'Archivar Pendientes'}
             >
-                <ArchiveTasksDialog
-                    tasksDao={tasksDao}
-                    tasksDto={selectedTasksDto}
-                    archiveTask={archiveTasks}
+                <ArchiveDrawsDialog
+                    drawsDao={drawsDao}
+                    drawsDto={selectedDrawsDto}
+                    archiveDraw={archiveDraws}
                 />
             </CustomDialog>
 
             <CustomDialog
-                setIsOpen={setIsDeleteTasksDialogOpen}
-                isOpen={isDeleteTasksDialogOpen}
-                title={selectedTasksDto.length === 1 ? 'Eliminar Pendiente' : 'Eliminar Pendientes'}
+                setIsOpen={setIsDeleteDrawsDialogOpen}
+                isOpen={isDeleteDrawsDialogOpen}
+                title={selectedDrawsDto.length === 1 ? 'Eliminar Pendiente' : 'Eliminar Pendientes'}
             >
-                <DeleteTasksDialog
-                    tasksDao={tasksDao}
-                    tasksDto={selectedTasksDto}
-                    deleteTask={deleteTasks}
+                <DeleteDrawsDialog
+                    drawsDao={drawsDao}
+                    drawsDto={selectedDrawsDto}
+                    deleteDraw={deleteDraws}
                 />
             </CustomDialog>
 
              <CustomDialog
-                setIsOpen={setIsFilterTasksDialogOpen}
-                isOpen={isFilterTasksDialogOpen}
+                setIsOpen={setIsFilterDrawsDialogOpen}
+                isOpen={isFilterDrawsDialogOpen}
                 title={'Filtrar'}
             >
-                <FilterTasksDialog
-                    taskFilter={taskFilter}
+                <FilterDrawsDialog
+                    drawFilter={drawFilter}
                     clearFilter={clearFilter}
-                    getTasks={filterTasks}
+                    getDraws={filterDraws}
                 />
             </CustomDialog>
         </ModuleTemplate>
     );
 }
 
-export default Tasks;
+export default Draws;

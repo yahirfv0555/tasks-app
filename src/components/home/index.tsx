@@ -1,15 +1,13 @@
-import { AppRoute } from "@/models/general";
 import routes from "@/core/config/routes";
 import MenuItem from "./menu-item";
 import Auth from "@/core/middleware/auth";
 import { useEffect, useState } from "react";
-import { TaskDto, TaskFilter } from "@/models/task";
 import TasksService from "@/services/tasks/tasks-service";
 import NowTaskItem from "./now-task-item";
 import { useLoaderProvider } from "@/providers/loader/loader-provider";
-import { UserDto } from "@/models";
 import SlideDown from "react-slidedown";
 import { ToggleButtonOption } from "@/shared/components/toggle-button";
+import { AppRoute, TaskDto, TaskFilter, UserDto } from "@/models";
 
 const auth: Auth = new Auth();
 const tasksService: TasksService = new TasksService();

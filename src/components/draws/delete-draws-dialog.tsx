@@ -1,33 +1,33 @@
 import { useEffect } from "react";
-import { NoteDao, NoteDto } from "@/models";
+import { DrawDao, DrawDto } from "@/models";
 import Button from "@/shared/components/button";
 
-export interface DeleteNotesDialogProps {
-    deleteNote: () => Promise<void>;
-    notesDao: NoteDao[];
-    notesDto: NoteDto[];
+export interface DeleteDrawsDialogProps {
+    deleteDraw: () => Promise<void>;
+    drawsDao: DrawDao[];
+    drawsDto: DrawDto[];
 }
 
-const DeleteNotesDialog: React.FC<DeleteNotesDialogProps> = props => {
-    const { deleteNote, notesDao, notesDto } = props;
+const DeleteDrawsDialog: React.FC<DeleteDrawsDialogProps> = props => {
+    const { deleteDraw, drawsDao, drawsDto } = props;
     
     useEffect(() => {
-        setNotesDao();
+        setDrawsDao();
     }, []);
 
-    const setNotesDao = () => {
-        for (const noteDto of notesDto) {
-            notesDao.push({ noteId: noteDto.noteId });
+    const setDrawsDao = () => {
+        for (const drawDto of drawsDto) {
+            drawsDao.push({ drawId: drawDto.drawId });
         }
     }
 
     const submit = async(): Promise<void> => {
         
-        for (const noteDao of notesDao) {
-            noteDao.active = false;
+        for (const drawDao of drawsDao) {
+            drawDao.active = false;
         }
 
-        await deleteNote();
+        await deleteDraw();
 
     }
 
@@ -47,4 +47,4 @@ const DeleteNotesDialog: React.FC<DeleteNotesDialogProps> = props => {
     );
 }
 
-export default DeleteNotesDialog;
+export default DeleteDrawsDialog;

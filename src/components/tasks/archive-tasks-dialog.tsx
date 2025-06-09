@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { TaskDao, TaskDto } from "@/models/task";
+import { TaskDao, TaskDto } from "@/models";
 import Button from "@/shared/components/button";
 
 export interface ArchiveTasksDialogProps {

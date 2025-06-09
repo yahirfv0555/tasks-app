@@ -1,23 +1,23 @@
-import { NoteDto } from "@/models";
+import { DrawDto } from "@/models";
 import { useMessageProvider } from "@/providers/message/message-provider";
 import IconButton from "@/shared/components/icon-button";
 import { useState } from "react";
-import { IoIosArrowBack } from "react-icons/io";
-import { IoArchive, IoCopy, IoDuplicate, IoPencil, IoTrash } from "react-icons/io5";
+import { IoIosArrowBack, IoIosArrowDropleftCircle } from "react-icons/io";
+import { IoArchive, IoCopy, IoDuplicate, IoPencil, IoRemove, IoTrash } from "react-icons/io5";
 import SlideDown from "react-slidedown";
 import 'react-slidedown/lib/slidedown.css';
 
-export interface NoteItemProps extends NoteDto {
-    openUpdateDialog: (note: NoteDto) => void;
-    openDuplicateDialog: (note: NoteDto) => void;
-    openArchiveDialog: (note: NoteDto) => void;
-    openDeleteDialog: (note: NoteDto) => void;
+export interface DrawItemProps extends DrawDto {
+    openUpdateDialog: (draw: DrawDto) => void;
+    openDuplicateDialog: (draw: DrawDto) => void;
+    openArchiveDialog: (draw: DrawDto) => void;
+    openDeleteDialog: (draw: DrawDto) => void;
     disabled?: boolean;
     className?: string;
 }
 
-const NoteItem: React.FC<NoteItemProps> = props => {
-    const { openUpdateDialog, openDuplicateDialog, openArchiveDialog, openDeleteDialog, className, disabled, title, description, tag } = props;
+const DrawItem: React.FC<DrawItemProps> = props => {
+    const { openUpdateDialog, openDuplicateDialog, openArchiveDialog, openDeleteDialog, className, disabled, title, image, tag } = props;
 
     const { setMessage } = useMessageProvider();
 
@@ -49,10 +49,10 @@ const NoteItem: React.FC<NoteItemProps> = props => {
         openDeleteDialog(props);
     }
 
-    const copyDescription = async(event: React.MouseEvent<HTMLButtonElement>) => {
+    const copyImage = async(event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation(); 
         try {
-            await navigator.clipboard.writeText(description)
+            await navigator.clipboard.writeText(image)
             setMessage({
                 type: 'success',
                 message: 'Nota copiada',
@@ -86,7 +86,7 @@ const NoteItem: React.FC<NoteItemProps> = props => {
                             <div className={`
                                 flex flex-row justify-between 
                             `}>
-                                <div className="w-[80%] text-sm">{description}</div>
+                                <div className="w-[80%] text-sm">{image}</div>
                             </div>
                         }
                     </SlideDown>
@@ -151,7 +151,7 @@ const NoteItem: React.FC<NoteItemProps> = props => {
                 <IconButton
                     className="bg-white"
                     icon={<IoCopy color="#4ade80"/>}
-                    onClick={copyDescription}
+                    onClick={copyImage}
                 />
             </div>
            
@@ -159,4 +159,4 @@ const NoteItem: React.FC<NoteItemProps> = props => {
     );
 }
 
-export default NoteItem;
+export default DrawItem;

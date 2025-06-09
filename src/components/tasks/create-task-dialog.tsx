@@ -1,10 +1,9 @@
-import { TaskDao, TaskDto } from "@/models/task";
+import { TaskDao, TaskDto } from "@/models";
 import Button from "@/shared/components/button";
 import { ErrorMessageProps } from "@/shared/components/error-message";
 import Input from "@/shared/components/input";
 import TextArea from "@/shared/components/textarea";
 import validateNotNullableData from "@/shared/functions/validate-not-nullable-data";
-import { Description } from "@headlessui/react";
 import { useState } from "react";
 
 export interface CreateTaskDialogProps {

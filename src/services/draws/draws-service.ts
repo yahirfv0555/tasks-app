@@ -1,21 +1,21 @@
 import Auth from "@/core/middleware/auth";
 import ApiService from "@/core/services/api-service";
-import { Execution, NoteDao, NoteDto, NoteFilter, TagDto, TagFilter } from "@/models";
+import { Execution, DrawDao, DrawDto, DrawFilter, TagDto, TagFilter } from "@/models";
 import { cleanBooleanParam, cleanParam } from "@/shared/functions/cleanParams";
 
 const auth: Auth = new Auth();
 
-class NotesService {
+class DrawsService {
 
-    private section: string = 'notes/';
+    private section: string = 'draws/';
     private apiService: ApiService;
     
     constructor() {
         this.apiService = new ApiService();
     }
 
-    public getNotes = async(filter: NoteFilter): Promise<NoteDto[]> => {
-        const tasks: NoteDto[] = await this.apiService.get(`${this.section}
+    public getDraws = async(filter: DrawFilter): Promise<DrawDto[]> => {
+        const tasks: DrawDto[] = await this.apiService.get(`${this.section}
             ?userId=${cleanParam(filter.userId)}
             &title=${cleanParam(filter.title)}
             &active=${cleanBooleanParam(filter.active)}
@@ -25,28 +25,28 @@ class NotesService {
     }
 
     public getTags = async(filter: TagFilter): Promise<TagDto[]> => {
-        const tasks: NoteDto[] = await this.apiService.get(`${this.section}tags/
+        const tasks: DrawDto[] = await this.apiService.get(`${this.section}tags/
             ?userId=${cleanParam(filter.userId)}
             &tags=${cleanParam(filter.tags)}
         `);
         return tasks;
     }
 
-    public createNote = async(task: NoteDao): Promise<Execution> => {
+    public createDraw = async(task: DrawDao): Promise<Execution> => {
         const execution: Execution = await this.apiService.post(task, `${this.section}`);
         return execution;
     }
 
-    public updateNote = async(task: NoteDao): Promise<Execution> => {
+    public updateDraw = async(task: DrawDao): Promise<Execution> => {
         const execution: Execution = await this.apiService.put(task, `${this.section}`);
         return execution;
     }
 
-    public deleteNote = async(filter: NoteFilter): Promise<Execution> => {
+    public deleteDraw = async(filter: DrawFilter): Promise<Execution> => {
         const execution: Execution = await this.apiService.delete(filter, `${this.section}`);
         return execution;
     }
 
 }
 
-export default NotesService;
+export default DrawsService;

@@ -17,7 +17,7 @@ import { IoAdd, IoArchive, IoCheckboxOutline, IoFilter, IoSearch, IoTrash } from
 import { useMessageProvider } from "@/providers/message/message-provider";
 import { useLoaderProvider } from "@/providers/loader/loader-provider";
 import { Execution, UserDto } from "@/models";
-import { NoteDao, NoteDto, NoteFilter } from "@/models/note";
+import { NoteDao, NoteDto, NoteFilter } from "@/models";
 
 const notesService: NotesService = new NotesService();
 const auth: Auth = new Auth();

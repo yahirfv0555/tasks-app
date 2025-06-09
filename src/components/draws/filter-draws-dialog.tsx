@@ -1,9 +1,9 @@
 
 
 import Auth from "@/core/middleware/auth";
-import { NoteFilter, TagDto, TagFilter, UserDto } from "@/models";
+import { DrawFilter, TagDto, TagFilter, UserDto } from "@/models";
 import { useLoaderProvider } from "@/providers/loader/loader-provider";
-import NotesService from "@/services/notes/notes-service";
+import DrawsService from "@/services/draws/draws-service";
 import Button from "@/shared/components/button";
 import IconButton from "@/shared/components/icon-button";
 import Input from "@/shared/components/input";
@@ -11,19 +11,19 @@ import Select from "@/shared/components/select";
 import { useEffect, useState } from "react";
 import { IoCloseOutline, IoFilterOutline } from "react-icons/io5";
 
-export interface FilterNotesDialogProps {
-    getNotes: () => Promise<void>;
+export interface FilterDrawsDialogProps {
+    getDraws: () => Promise<void>;
     clearFilter: () => void;
-    noteFilter: NoteFilter;
+    drawFilter: DrawFilter;
 }
 
 const auth: Auth = new Auth();
-const notesService: NotesService = new NotesService();
+const drawsService: DrawsService = new DrawsService();
 
 let user: UserDto = {};
 
-const FilterNotesDialog: React.FC<FilterNotesDialogProps> = props => {
-    const { getNotes, clearFilter, noteFilter } = props;
+const FilterDrawsDialog: React.FC<FilterDrawsDialogProps> = props => {
+    const { getDraws, clearFilter, drawFilter } = props;
 
     const { setIsLoading } = useLoaderProvider();
 
@@ -54,8 +54,8 @@ const FilterNotesDialog: React.FC<FilterNotesDialogProps> = props => {
     }
 
     const getTags = async(): Promise<void> => {
-        const filter: TagFilter = { ...noteFilter, userId: user.userId };
-        const tags: TagDto[] = await notesService.getTags(filter);
+        const filter: TagFilter = { ...drawFilter, userId: user.userId };
+        const tags: TagDto[] = await drawsService.getTags(filter);
 
         setTags(tags);
     }
@@ -63,16 +63,16 @@ const FilterNotesDialog: React.FC<FilterNotesDialogProps> = props => {
 
     //#region Handles
     const handleTitle = (value: string) => {
-        noteFilter.title = value;
+        drawFilter.title = value;
     }
 
     const handleTags = (value: string) => {
-        noteFilter.tags = value;
+        drawFilter.tags = value;
     }
     //#endregion
 
     const submit = async(): Promise<void> => {
-        await getNotes();
+        await getDraws();
     }
 
     return (
@@ -83,7 +83,7 @@ const FilterNotesDialog: React.FC<FilterNotesDialogProps> = props => {
                 type="text"
                 label="Título"
                 containerClassName="w-full mb-5"
-                initialValue={noteFilter.title}
+                initialValue={drawFilter.title}
             />
 
            <Select
@@ -126,4 +126,4 @@ const FilterNotesDialog: React.FC<FilterNotesDialogProps> = props => {
     );
 }
 
-export default FilterNotesDialog;
+export default FilterDrawsDialog;

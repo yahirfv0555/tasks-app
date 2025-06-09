@@ -1,4 +1,4 @@
-import { AppRoute } from "@/models/general";
+import { AppRoute } from "@/models";
 
 
 const routes: AppRoute[] = [

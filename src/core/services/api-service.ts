@@ -1,6 +1,6 @@
 import { apiUrl } from '../config/api';
 import Auth from '../middleware/auth';
-import { Execution, HttpHeaders, LoginExecution } from "@/models/general";
+import { Execution, HttpHeaders, LoginExecution } from "@/models";
 
 class ApiService {
 

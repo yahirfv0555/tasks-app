@@ -1,49 +1,48 @@
-import { NoteDao, NoteDto } from "@/models";
+import { DrawDao, DrawDto } from "@/models";
 import Button from "@/shared/components/button";
 import Input from "@/shared/components/input";
 import TextArea from "@/shared/components/textarea";
 import validateNotNullableData from "@/shared/functions/validate-not-nullable-data";
-import { useEffect } from "react";
+import { useState } from "react";
 
-export interface UpdateNoteDialogProps {
-    updateNote: () => Promise<void>;
-    noteDao: NoteDao;
-    noteDto: NoteDto;
+export interface CreateDrawDialogProps {
+    createDraw: () => Promise<void>;
+    drawDao: DrawDao;
+    drawDto?: DrawDto;
 }
 
-const UpdateNoteDialog: React.FC<UpdateNoteDialogProps> = props => {
-    const { updateNote, noteDao, noteDto } = props;
-    
-    useEffect(() => {
-        noteDao.noteId = noteDto.noteId;
-    }, []);
+const CreateDrawDialog: React.FC<CreateDrawDialogProps> = props => {
+    const { createDraw, drawDao, drawDto } = props;
 
+    const [startValidation, setStartValidation] = useState<boolean>(false);
+    
     //#region Handles
     const handleTitle = (value: string) => {
-        noteDao.title = value;
+        drawDao.title = value;
     }
 
     const handleTag = (value: string) => {
-        noteDao.tag = value;
+        drawDao.tag = value;
     }
     
-    const handleDescription = (value: string) => {
-        noteDao.description = value;
+    const handleImage = (value: string) => {
+        drawDao.image = value;
     }
     //#endregion
 
     //#region Validaciones
     const validateTitle = (value?: string) => validateNotNullableData('título', value);
-    
+
     const validateTag = (value?: string) => validateNotNullableData('etiqueta', value);
 
-    const validateDescription = (value?: string) => validateNotNullableData('descripción', value)
+    const validateImage = (value?: string) => validateNotNullableData('descripción', value)
 
-    const validateData = (): boolean => !validateTitle(noteDao.title).showing && !validateDescription(noteDao.description).showing;
+    const validateData = (): boolean => !validateTitle(drawDao.title).showing && !validateImage(drawDao.image).showing;
     //#endregion
 
     const submit = async(): Promise<void> => {
-        if (validateData()) await updateNote();
+        setStartValidation(prevValue => !prevValue);
+        if (validateData()) await createDraw();
     }
 
     return (
@@ -51,29 +50,32 @@ const UpdateNoteDialog: React.FC<UpdateNoteDialogProps> = props => {
             <div className="flex flex-row justify-between">
                 <Input
                     setValue={handleTitle}
-                    initialValue={noteDto.title}
                     type="text"
                     label="Título"
                     containerClassName="w-[48%] mb-5"
+                    initialValue={drawDto?.title}
                     validateData={validateTitle}
+                    startValidation={startValidation}
                 />
 
                 <Input
                     setValue={handleTag}
-                    initialValue={noteDto?.tag}
                     type="text"
                     label="Etiqueta"
                     containerClassName="w-[48%] mb-5"
+                    initialValue={drawDto?.tag}
                     validateData={validateTag}
+                    startValidation={startValidation}
                 />
             </div>
             
             <TextArea
-                setValue={handleDescription}
+                setValue={handleImage}
                 label="Descripción"
-                initialValue={noteDto.description}
                 containerClassName="mb-5"
-                validateData={validateDescription}
+                validateData={validateImage}
+                initialValue={drawDto?.image}
+                startValidation={startValidation}
             />
 
             <Button
@@ -86,4 +88,4 @@ const UpdateNoteDialog: React.FC<UpdateNoteDialogProps> = props => {
     );
 }
 
-export default UpdateNoteDialog;
+export default CreateDrawDialog;

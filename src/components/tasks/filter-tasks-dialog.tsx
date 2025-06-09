@@ -1,6 +1,6 @@
 
 
-import { TaskFilter } from "@/models/task";
+import { TaskFilter } from "@/models";
 import Button from "@/shared/components/button";
 import IconButton from "@/shared/components/icon-button";
 import Input from "@/shared/components/input";

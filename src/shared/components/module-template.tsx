@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { AppRoute } from "@/models/general";
+import { AppRoute } from "@/models";
 import ExpandableFab from "./expandable-fab";
 import Link from "next/link";
 
